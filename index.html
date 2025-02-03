@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Beiruti:wght@200..900&family=Cairo:wght@200..1000&family=Kufam:ital,wght@0,400..900;1,400..900&family=Markazi+Text:wght@400..700&display=swap" rel="stylesheet">
+    <title>Print</title>
+    <style>
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed, 
+        figure, figcaption, footer, header, hgroup, 
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+        /* HTML5 display-role reset for older browsers */
+        article, aside, details, figcaption, figure, 
+        footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+        body {
+            line-height: 1;
+        }
+        ol, ul {
+            list-style: none;
+        }
+        blockquote, q {
+            quotes: none;
+        }
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+    </style>
+    <style>
+        @media print {
+            @page {
+                size: A4 landscape;
+            }
+        }
+    </style>
+    <style>
+        .cairo {
+            font-family: "Cairo", serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+            font-variation-settings: "slnt" 0;
+        }
+        .beiruti {
+            font-family: "Beiruti", serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+        .kufam {
+            font-family: "Kufam", serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+        .markazi-text {
+            font-family: "Markazi Text", serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+        .lateef {
+            font-family: "Lateef";
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+        .faseh {
+            font-family: "Faseh";
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: Lateef;
+            src: url("/LateefroundedFont-Regular.otf");
+        }
+        @font-face {
+            font-family: Faseh;
+            src: url("/DG\ Faseh-Bold.ttf");
+            font-weight: bold;
+        }
+    </style>
+    <style> /* dims 594px x 1050px */
+        body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 59.4mm);
+            max-width: 297mm;
+        }
+        div.card {
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            page-break-inside: avoid;
+            box-sizing: border-box;
+            padding: 3mm;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .mb-1 { margin-bottom: 1mm; }
+        .mb-2 { margin-bottom: 2mm; }
+        .mb-3 { margin-bottom: 3mm; }
+
+        .pt-3 { padding-top: 3mm; }
+
+        .border-top { border-top: 1px solid black; }
+
+        .fs-09 { font-size: .9rem; }
+        .fs-11 { font-size: 1.1rem; }
+        .fs-12 { font-size: 1.2rem; }
+        .fs-13 { font-size: 1.3rem; }
+        .fs-15 { font-size: 1.5rem; }
+        .fw-100 { font-weight: 100; }
+        .fw-200 { font-weight: 200; }
+        .fw-300 { font-weight: 300; }
+        .bold { font-weight: bold; }
+
+        .ltr { direction: ltr; }
+        .rtl { direction: rtl; }
+
+        .text-center { text-align: center; }
+        .underline { text-decoration: underline;}
+
+        div.card {
+            background-color: white;
+            border-bottom: 1px solid black;
+            border-right: 1px solid black;
+            color: black;
+            height: 105mm;
+        }
+        div.card header {
+            border-bottom: 1px solid black;
+        }
+        div.card .logo {
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        div.card .title {
+            align-items: end;
+        }
+        div.card .title .facture-id {
+            font-size: .75rem;
+            font-family: Cairo;
+        }
+        div.card .listing {
+            margin-bottom: 2mm;
+            border-bottom: 1px solid #7e7e7e;
+        }
+        div.card .sum {
+            margin-top: 2mm;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1mm;
+        }
+
+        div.card .row {
+            align-items: center;
+        }
+        div.card .type {
+            display: flex;
+            flex-direction: column;
+        }
+        div.card img.logo {
+            margin: initial;
+            min-width: 50%;
+        }
+        div.card .stats {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            justify-content: center;
+        }
+
+        div.card .listing {
+            border-bottom: none;
+        }
+        div.card .listing .line {
+            flex: 1;
+            border-bottom: 1px solid rgb(165, 165, 165);
+            align-self: flex-end;
+            margin: 0 1mm;
+        }
+        
+    </style>
+
+    <script>
+        const count = 10;
+        document.onreadystatechange = () => {
+            if (document.readyState != "complete") return;
+            const brick = document.body.firstElementChild
+
+            const fragment = document.createDocumentFragment()
+
+            for (let i = 0; i < count; ++i) {
+                const clone = brick.cloneNode(true);
+                fragment.append(clone)
+            } 
+            fragment.prepend(brick)
+            document.body.prepend(fragment)
+        }
+    </script>
+</head>
+<!-- cairo beiruti kufam markazi-text -->
+<body>
+    <div class="column">
+        <div class="card">
+            <div class="row mb-3 rtl">
+                <div class="type">
+                    <span class="cairo bold fs-15 mb-2">توصيل بالأداء</span>
+                    <span class="facture-id kufam fs-12">234234</span>
+                </div>
+                <img class="logo" src="/water_logo_1200x1200.png" />
+            </div>
+            <h4 class="text-center mb-2 underline kufam fs-09 fw-100"> 02 / 2025 </h4>
+            <h3 class="text-center mb-2 fs-12 kufam">يوسف السالمي</h3>
+            <h4 class="text-center mb-3 beiruti kufam rtl"><span>العداد</span> <span class="underline">127</span></h4>
+    
+    
+            <div class="stats">
+                <div class="row listing">
+                    <span class="beiruti">1845</span>
+                    <span class="line"></span>
+                    <span class="beiruti">العدد السابق</span>
+                </div>
+                <div class="row listing">
+                    <span class="beiruti">2158 </span>
+                    <span class="line"></span>
+                    <span class="beiruti">العدد الحالي</span>
+                </div>
+                <div class="row listing">
+                    <span class="beiruti">313</span>
+                    <span class="line"></span>
+                    <span class="beiruti">الاستهلاك</span>
+                </div>
+                <div class="row listing">
+                    <span class="beiruti">2</span>
+                    <span class="line"></span>
+                    <span class="beiruti">ثمن الوحدة</span>
+                </div>
+            </div>
+            <div class="row listing fs-13 pt-3 border-top">
+                <span class="beiruti rtl"><span>616</span> <span class="fs-09">درهم</span></span>
+                <span class="linef"></span>
+                <div class="beiruti fs-13">الواجب أداؤه</div>
+            </div>
+        </div>
+        <div class="card">
+            <header class="row mb-2 rtl">
+                <div class="type">
+                    <span class="cairo bold fs-15 mb-2">إعلان بالاداء</span>
+                    <span class="facture-id kufam fs-12">234234</span>
+                </div>
+                <img class="logo" src="/water_logo_1200x1200.png" />
+            </header>
+            <h4 class="text-center mb-2 underline kufam fs-09 fw-100"> 02 / 2025 </h4>
+            <h3 class="text-center mb-2 fs-12 kufam">يوسف السالمي</h3>
+            <h4 class="text-center mb-3 beiruti kufam rtl"><span>العداد</span> <span class="underline">127</span></h4>
+    
+    
+            <div class="stats">
+                <div class="row listing">
+                    <span class="beiruti">1845</span>
+                    <span class="line"></span>
+                    <span class="beiruti">العدد السابق</span>
+                </div>
+                <div class="row listing">
+                    <span class="beiruti">2158 </span>
+                    <span class="line"></span>
+                    <span class="beiruti">العدد الحالي</span>
+                </div>
+                <div class="row listing">
+                    <span class="beiruti">313</span>
+                    <span class="line"></span>
+                    <span class="beiruti">الاستهلاك</span>
+                </div>
+                <div class="row listing">
+                    <span class="beiruti">2</span>
+                    <span class="line"></span>
+                    <span class="beiruti">ثمن الوحدة</span>
+                </div>
+            </div>
+            <div class="row listing fs-13 pt-3 border-top">
+                <span class="beiruti rtl"><span>616</span> <span class="fs-09">درهم</span></span>
+                <span class="linef"></span>
+                <div class="beiruti fs-13">الواجب أداؤه</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

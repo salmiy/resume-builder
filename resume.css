@@ -1,0 +1,289 @@
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.block { display: block; }
+.column { display: flex; flex-direction: column; }
+.row { display: flex; flex-direction: row; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.align-center { align-items: center; }
+
+
+.h-8 { height: 2rem; }
+.w-14 { width: 3.5rem; }
+.rounded-full { border-radius: 20rem; }
+.bg-E5E7EB { background-color: #E5E7EB; }
+.left-1 { left: .25rem; }
+.top-1 { top: .25rem; }
+.h-6 {height: 1.5rem; } .w-6 { width: 1.5rem; } 
+.bg-white { background-color: white;} 
+.transition {transition: all .25s ease-in-out; }
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+.peer ~ .block {
+    background-color: #aaa;
+}
+.peer:checked ~ .dot {
+    background-color: #a0ffff;
+    transform: translate(100%);
+}
+.peer:checked ~ .block {
+    background-color: #263f3f;
+    /* border: 1px solid #263f3f; */
+}
+
+
+
+.mb-1 { margin-bottom: 1mm; }
+.mb-2 { margin-bottom: 2mm; }
+.mb-3 { margin-bottom: 3mm; }
+
+.pt-3 { padding-top: 3mm; }
+.p-3 { padding: 3mm; }
+.p-1rem { padding: 1rem; }
+
+.border-top { border-top: 1px solid black; }
+
+.fs-09 { font-size: .9rem; }
+.fs-11 { font-size: 1.1rem; }
+.fs-12 { font-size: 1.2rem; }
+.fs-13 { font-size: 1.3rem; }
+.fs-15 { font-size: 1.5rem; }
+.fw-100 { font-weight: 100; }
+.fw-200 { font-weight: 200; }
+.fw-300 { font-weight: 300; }
+.bold { font-weight: bold; }
+
+.ltr { direction: ltr; }
+.rtl { direction: rtl; }
+
+.text-black { color: black; }
+.text-222 { color: #222; }
+.text-center { text-align: center; }
+.underline { text-decoration: underline;}
+.select-none { user-select: none; }
+
+.pointer { cursor: pointer; }
+
+
+
+#control {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    height: 45rem;
+    width: 25rem;
+    background-color: #263f3f;
+    color: silver;
+    border-radius: 2rem;
+    font-family: Montserrat;
+    display: flex;
+    flex-direction: column;
+
+    transition: all .4s cubic-bezier(0.68, -0.6, 0.32, 1.6) 50ms, background 50ms;
+    box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
+        0 2px 2px hsl(0deg 0% 0% / 0.075),
+        0 4px 4px hsl(0deg 0% 0% / 0.075),
+        0 8px 8px hsl(0deg 0% 0% / 0.075),
+        0 16px 16px hsl(0deg 0% 0% / 0.075);
+        overflow: hidden;
+}
+#control.collapsed {
+    height: 4rem;
+    width: 4rem;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
+@media print {
+    #control {
+        display: none;
+    }
+}
+
+#control header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+    padding-bottom: .75rem;
+    background: rgb(38, 63, 63);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+#control.collapsed header {
+    height: 4rem;
+    width: 4rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    position: initial;
+}
+
+#control header button {
+    height: 2.5rem;
+    width: 2.5rem;
+    fill: none;
+    stroke: #eee;
+    stroke-width: 2;
+    padding: .5rem;
+}
+#control header button#open {
+    display: none;
+}
+#control header button#close,
+#control header button#back {
+    display: flex;
+    stroke: #ddd;
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#control header button#back {
+    display: flex;
+    margin-right: auto;
+    transition: transform .3s cubic-bezier(0.68, -0.6, 0.32, 1.6), opacity .25s ease;
+}
+#control header button#back.hidden {
+    transform: translateX(-3rem);
+    opacity: 0;
+}
+#control header button#back.visible {
+    transform: translateX(0rem);
+    opacity: 1;
+}
+#control.collapsed header button#open {
+    display: flex;
+    height: 2.5rem;
+    width: 2.5rem;
+}
+#control.collapsed header button#close,
+#control.collapsed header button#back {
+    display: none;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 200;
+    color: #eee;
+    margin-right: auto;
+    height: 100%;
+    align-self: center;
+
+}
+
+#control .list {
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    font-size: 2rem;
+    font-weight: 200;
+    color: #eee;
+    flex: 1;
+    justify-content: center;
+    margin: 0 auto;
+}
+#control .list li {
+    display: flex;
+    position: relative;
+    top: 0;
+    cursor: pointer;
+    transition: all .25s ease, opacity .25s ease, top .25s ease 0s;
+}
+#control .list li span {
+    position: relative;
+    transition: all .25s ease;
+    left: 0;
+}
+#control .list li.hidden {
+    opacity: 0;
+}
+#control .list li.visible {
+    cursor: initial;
+}
+#control .list li.visible span {
+    left: 50% !important;
+    transform: translateX(-50%);
+}
+#control .list li.visible div {
+    display: none;
+}
+#control .list li div {
+    height: 1px;
+    width: 0;
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    background: #eee;
+    transition: all .3s ease-out;
+}
+#control .list li:hover div {
+    width: 100%;
+}
+
+#control #content {
+    --height: 4.5rem;
+    position: absolute;
+    top: var(--height);
+    height: calc(100% - var(--height));
+    width: 100%;
+    flex: 1;
+    background-color: #eee;
+    border-radius: 1.9rem;
+    transform: scale(0);
+    opacity: 0;
+    transition: all .3s ease-in-out;
+}
+#control #content.visible {
+    transform: scale(1);
+    opacity: 1;
+}
+#control input {
+    padding: .5rem 1rem;
+    border: none;
+    border-bottom: 1px solid rgb(192, 192, 192);
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: #333;
+    outline: none;
+    background-color: transparent;
+}
+
+
+#app {
+    max-width: 210mm;
+    min-height: 297mm;
+}
+.me {
+    height: 40mm;
+    background-color: beige;
+    display: flex;
+}
+.content { flex: 1; }
+.side {
+    width: 65mm;
+    background-color: azure;
+}
+.main {
+    flex:  1;
+    background-color: bisque;
+}
