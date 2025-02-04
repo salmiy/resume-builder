@@ -13,6 +13,12 @@ button {
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
 .align-center { align-items: center; }
+.align-start { align-items: start; }
+.self-center { align-self: center; }
+.self-stretch { align-self: stretch; }
+.gap-1 { gap: .25rem; }
+.gap-2 { gap: .5rem; }
+.gap-3 { gap: 1rem; }
 
 
 .h-8 { height: 2rem; }
@@ -39,7 +45,7 @@ button {
     background-color: #aaa;
 }
 .peer:checked ~ .dot {
-    background-color: #a0ffff;
+    background-color: #f9f871;
     transform: translate(100%);
 }
 .peer:checked ~ .block {
@@ -80,13 +86,25 @@ button {
 
 .pointer { cursor: pointer; }
 
+.h-2 { height: 2rem; }
+.w-2 { width: 2rem; }
+.rounded-05 { border-radius: .5rem !important; }
+.rounded-1 { border-radius: 1rem; }
+
+.shadow {
+    box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
+        0 2px 2px hsl(0deg 0% 0% / 0.075),
+        0 4px 4px hsl(0deg 0% 0% / 0.075),
+        0 8px 8px hsl(0deg 0% 0% / 0.075),
+        0 16px 16px hsl(0deg 0% 0% / 0.075);
+}
 
 
 #control {
     position: fixed;
     bottom: 30px;
     left: 30px;
-    height: 45rem;
+    height: 30rem;
     width: 25rem;
     background-color: #263f3f;
     color: silver;
@@ -101,7 +119,7 @@ button {
         0 4px 4px hsl(0deg 0% 0% / 0.075),
         0 8px 8px hsl(0deg 0% 0% / 0.075),
         0 16px 16px hsl(0deg 0% 0% / 0.075);
-        overflow: hidden;
+    overflow: hidden;
 }
 #control.collapsed {
     height: 4rem;
@@ -180,18 +198,36 @@ button {
     display: none;
 }
 
-.title {
+#control header .title {
     font-size: 2rem;
     font-weight: 200;
     color: #eee;
     margin-right: auto;
     height: 100%;
     align-self: center;
-
+    position: relative;
+    top: -3rem;
+    opacity: 0;
+    transition: all .25s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+#control header .title.visible {
+    opacity: 1;
+    top: 0;
+}
+#control.collapsed header .title {
+    display: none;
 }
 
+
+#control .list-wrapper {
+    padding: 3rem;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
 #control .list {
-    padding: 2em;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -200,14 +236,16 @@ button {
     color: #eee;
     flex: 1;
     justify-content: center;
-    margin: 0 auto;
+    margin: auto;
 }
 #control .list li {
     display: flex;
     position: relative;
     top: 0;
     cursor: pointer;
-    transition: all .25s ease, opacity .25s ease, top .25s ease 0s;
+    transition: all .25s ease var(--delay, .3s),
+                opacity .25s ease var(--delay, .3s),
+                top .25s ease var(--delay, .3s);
 }
 #control .list li span {
     position: relative;
@@ -216,6 +254,7 @@ button {
 }
 #control .list li.hidden {
     opacity: 0;
+    transition: all .25s ease, opacity .25s ease, top .25s ease 0s;
 }
 #control .list li.visible {
     cursor: initial;
@@ -248,16 +287,28 @@ button {
     width: 100%;
     flex: 1;
     background-color: #eee;
-    border-radius: 1.9rem;
+    border-radius: 2rem;
     transform: scale(0);
     opacity: 0;
     transition: all .3s ease-in-out;
+    transform-origin: bottom center;
+    overflow: hidden;
 }
 #control #content.visible {
     transform: scale(1);
     opacity: 1;
+    transition: all .3s ease-in-out .15s;
 }
-#control input {
+#control #content .main {
+    overflow: auto;
+    position: inherit;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding-bottom: 2rem;
+}
+#control input, #control textarea {
     padding: .5rem 1rem;
     border: none;
     border-bottom: 1px solid rgb(192, 192, 192);
@@ -267,8 +318,59 @@ button {
     outline: none;
     background-color: transparent;
 }
+#control textarea {
+    resize: vertical;
+}
+#control .contact-info .round-img-input {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+#control .contact-info .round-img-input:hover {
+    transform: scale(1.2);
+}
+#control .contact-info .round-img-input input {
+    display: none;
+}
+#control .contact-info .round-img-input img {
+    height: var(--size, 6rem);
+    width: var(--size, 6rem);
+    border-radius: 3rem;
+    object-fit: cover;
+}
+#control .contact-info .round-img-input.s-2 {
+    --size: 2rem;
+}
 
+#contact-info-links-form {
+    padding: 1rem;
+    background-color: #f9f871;
+    background-color: #a4a9cd;
+}
+#contact-info-links-form input {
+    border-color: #222;
+}
+#contact-info-links-form .first-row input {
+    flex: 1 1 0;
+    min-width: 0;
+}
+#contact-info-links-form button {
+    font-size: 1.1rem;
+    text-transform: capitalize;
+    background: #263f3f;
+    color: #ddd;
+    flex: 1;
+    margin-top: .25rem;
+    border-radius: 2rem;
+}
 
+#contact-info-links {
+    padding: 2rem 1rem;
+}
+#contact-info-links .delete-link:hover {
+    animation: wiggle .5s ease;
+}
 #app {
     max-width: 210mm;
     min-height: 297mm;
@@ -283,7 +385,16 @@ button {
     width: 65mm;
     background-color: azure;
 }
-.main {
+#app > .main {
     flex:  1;
     background-color: bisque;
+}
+
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+   80% { transform: rotate(0deg); }
+   85% { transform: rotate(10deg); }
+   95% { transform: rotate(-10deg); }
+  100% { transform: rotate(0deg); }
 }
