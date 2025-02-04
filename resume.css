@@ -221,7 +221,7 @@ button {
 
 #control .list-wrapper {
     padding: 3rem;
-    overflow: scroll;
+    overflow: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -342,6 +342,10 @@ button {
 #control .contact-info .round-img-input.s-2 {
     --size: 2rem;
 }
+#control .contact-info .section-title {
+    padding: .5rem 1rem;
+    margin-top: .5rem;
+}
 
 #contact-info-links-form {
     padding: 1rem;
@@ -362,14 +366,17 @@ button {
     color: #ddd;
     flex: 1;
     margin-top: .25rem;
-    border-radius: 2rem;
+    border-radius: .5rem;
 }
 
 #contact-info-links {
     padding: 2rem 1rem;
 }
+#contact-info-links .delete-link {
+    margin-left: auto;
+}
 #contact-info-links .delete-link:hover {
-    animation: wiggle .5s ease;
+    animation: wiggle .15s ease;
 }
 #app {
     max-width: 210mm;
@@ -393,8 +400,8 @@ button {
 
 @keyframes wiggle {
     0% { transform: rotate(0deg); }
-   80% { transform: rotate(0deg); }
-   85% { transform: rotate(10deg); }
-   95% { transform: rotate(-10deg); }
+   10% { transform: rotate(0deg); }
+   45% { transform: rotate(10deg); }
+   85% { transform: rotate(-10deg); }
   100% { transform: rotate(0deg); }
 }
