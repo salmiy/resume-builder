@@ -1,0 +1,66 @@
+
+import { useRef, ChangeEvent } from 'react';
+import ImageInput from '../ImageInput';
+import Switcher from '../Switcher';
+import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
+import useAutosizeTextArea from '@/hooks/useAutoResizeArea';
+import { DataScheme } from '@/machines/resumeMachine';
+import TextInput from '../Input';
+
+
+export default function Basics() {
+    const { basics }: DataScheme = useMachineStore()
+    const emit = useMachineEmitter()
+    const taRef = useRef<HTMLTextAreaElement>(null)
+
+    useAutosizeTextArea(taRef.current, basics.summary.data)
+
+    function onInputChange(eventType: string, e: ChangeEvent<HTMLInputElement>) {
+        emit?.({
+            type: eventType,
+            value: e.target.value
+        })
+    }
+
+    return (
+        <div className="contact-info flex flex-col text-[#111] pb-8">
+            <ImageInput
+                value={basics.image}
+                className="w-24 h-24 self-center mt-6 rounded-full overflow-hidden mb-2"
+                optionsClassName='top-[100%] left-[50%] translate-x-[-50%]'
+                onChange={ (url: string) => emit?.({type: "image.change", value: url})} />
+            
+            <div className="flex flex-col gap-2">
+                <TextInput 
+                    placeholder='Full Name' className='capitalize'
+                    value={basics.name} onChange={e => onInputChange('name.change', e)} />
+                <TextInput 
+                    placeholder='Email' className='capitalize'
+                    value={basics.email} onChange={e => onInputChange('email.change', e)} />
+                <TextInput 
+                    placeholder='Phone' className='capitalize'
+                    value={basics.phone} onChange={e => onInputChange('phone.change', e)} />
+                <TextInput 
+                    placeholder='Address' className='capitalize'
+                    value={basics.address} onChange={e => onInputChange('address.change', e)} />
+                <TextInput 
+                    placeholder='Title (eg. Software Engineer)' className='capitalize'
+                    value={basics.title} onChange={e => onInputChange('title.change', e)} />
+            </div>
+
+            <section className='flex flex-col mt-6'>
+                <div className="flex justify-between items-center px-4">
+                    <h3 className="py-2 mt-2 mb-3 text-2xl font-semibold">Summary</h3>
+                    <Switcher initial={basics.summary.enabled} onChange={(status: boolean) => emit?.({ type: 'summary.enable', value: status})} />
+                </div>
+                <textarea
+                    className="mb-1 resize-none"
+                    placeholder="Summary goes here"
+                    rows={0}
+                    ref={taRef}
+                    value={basics.summary.data}
+                    onChange={e => emit?.({ type: 'summary.change', value: e.target.value })}></textarea>
+            </section>
+        </div>
+    )
+}

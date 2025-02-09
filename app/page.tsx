@@ -1,18 +1,18 @@
 'use client';
-import contactInfoMachine from '@/machines/contactInfo';
+import resumeMachine from '@/machines/resumeMachine';
 import Control from '@/components/Control';
-import ResumeUI from '@/components/ResumeUI';
+import ResumeUI from '@/components/Template';
 import { useMachine } from '@xstate/react';
-import { MachineStoreContext, MachineSendContext } from '@/context/machineContexts';
+import { MachineStoreContext, MachineEmitterContext } from '@/context/machineContexts';
 
 export default function Home() {
-  const [state, send] = useMachine(contactInfoMachine)
+  const [state, send] = useMachine(resumeMachine)
   return (
     <MachineStoreContext.Provider value={state.context}>
         <ResumeUI />
-        <MachineSendContext.Provider value={send}>
+        <MachineEmitterContext.Provider value={send}>
             <Control />
-        </MachineSendContext.Provider>
+        </MachineEmitterContext.Provider>
     </MachineStoreContext.Provider>
   );
 }

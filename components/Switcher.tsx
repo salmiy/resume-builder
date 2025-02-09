@@ -12,7 +12,7 @@ const Switcher = (props: {
     }
 
     return (
-        <label className='row pointer select-none align-center'>
+        <label className='flex cursor-pointer select-none items-center'>
             <div className='relative'>
                 <input
                     type='checkbox'
