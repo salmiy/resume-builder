@@ -3,43 +3,58 @@ import React, { useState, JSX } from 'react';
 import Basics from './Basics';
 import SocialLinks from './SocialLinks';
 import Experience from './Experience';
+import Skills from './Skills';
+
+interface Category {
+    name: string,
+    form: JSX.Element
+}
 
 const categories = [
     {
         name: "Basics",
-        top: -12.25,
         form: <Basics />
     },
     {
         name: "Social Links",
-        top: -16.25,
         form: <SocialLinks />
     },
     {
         name: "Experience",
-        top: -20.25,
         form: <Experience />
     },
     {
         name: "Education",
-        top: -24.25,
-        form: <Basics />
+        form: <Skills />
     },
     {
         name: "Skills",
-        top: -28.25,
-        form: <Basics />
+        form: <Skills />
     },
 ]
 
 export default function Control() {
     const [collapsed, setCollapsed] = useState(false);
-    const [shownCat, setShownCat] = useState<{name: string, top: number, form: JSX.Element} | null>(null);
+    const [shownCat, setShownCat] = useState<Category | null>(null);
 
     function onCloseHandler() {
         setCollapsed(true)
         setShownCat(null)
     }
+
+    const createCategories = () => (
+        categories.map((cat, idx) =>
+            <li
+                key={idx}
+                className={`group relative font-[300] cursor-pointer transition-all duration-[250ms]  ${shownCat ? "opacity-0 delay-0" : "delay-[var(--delay)]"}`}
+                onClick={() => setShownCat(cat)}
+                style={{ '--delay': `${idx * .08 + .3}s` } as React.CSSProperties}
+            >
+                <span>{ cat.name }</span>
+                <div className='absolute bottom-[-2px] left-0 bg-[#eee] transition-all duration-300 h-[2px] w-0 group-hover:w-full'></div>
+            </li>
+        )
+    )
 
     return (
         <div id="control" className={collapsed ? 'collapsed' : ''} >
@@ -64,7 +79,7 @@ export default function Control() {
                     </svg>
                 </button>
                 <div 
-                    className={`text-[2rem] font-light text-[#eee] relative transition-all duration-300 ease-[cubic-bezier(0.165,0.84,0.44,1)] ${shownCat?'opacity-100 top-0':'opacity-0 -top-12'} ${collapsed && 'hidden'}`}
+                    className={`text-[2rem] text-[#eee] relative transition-all duration-300 ease-[cubic-bezier(0.165,0.84,0.44,1)] ${shownCat?'opacity-100 top-0':'opacity-0 -top-12'} ${collapsed && 'hidden'}`}
                 >
                     {shownCat?.name}
                 </div>
@@ -82,25 +97,13 @@ export default function Control() {
 
             {
                 collapsed ||
-                <div className="list-wrapper">
-                    <ul className="list">
-                        {
-                            categories.map((cat, idx) =>
-                                <li
-                                    key={idx}
-                                    className={shownCat?"hidden":undefined}
-                                    onClick={() => setShownCat(cat)}
-                                    style={{ '--delay': `${idx * .08 + .3}s` } as React.CSSProperties}
-                                >
-                                    <span>{ cat.name }</span>
-                                    <div></div>
-                                </li>
-                            )
-                        }
+                <div className="p-12 overflow-auto flex flex-col items-center h-full">
+                    <ul className="flex flex-col gap-8 text-4xl text-[#eee] flex-grow justify-center m-auto">
+                        { createCategories() }
                     </ul>
                 </div>
             }
-            <div id="content" className={shownCat ? "visible" : ""}>
+            <div className={`absolute top-[4.25rem] h-[calc(100%-4.25rem)] w-full flex-grow bg-[#eee] border-4 border-solid border-[#ccc] rounded-[2rem] transition-all duration-300 origin-bottom overflow-hidden ${shownCat ? "scale-100 opacity-100 delay-150" : "scale-0 opacity-0"}`}>
                 <div className="custom-scrollbar overflow-auto h-full w-full text-[#222]">
                     {shownCat && shownCat.form}
                 </div>

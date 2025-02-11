@@ -6,6 +6,7 @@ import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
 import useAutosizeTextArea from '@/hooks/useAutoResizeArea';
 import { DataScheme } from '@/machines/resumeMachine';
 import TextInput from '../Input';
+import { AutoResizeTextArea } from '../AutoResizeTextArea';
 
 
 export default function Basics() {
@@ -53,13 +54,11 @@ export default function Basics() {
                     <h3 className="py-2 mt-2 mb-3 text-2xl font-semibold">Summary</h3>
                     <Switcher initial={basics.summary.enabled} onChange={(status: boolean) => emit?.({ type: 'summary.enable', value: status})} />
                 </div>
-                <textarea
-                    className="mb-1 resize-none"
-                    placeholder="Summary goes here"
-                    rows={0}
-                    ref={taRef}
+                <AutoResizeTextArea
+                    placeholder='Summary....'
                     value={basics.summary.data}
-                    onChange={e => emit?.({ type: 'summary.change', value: e.target.value })}></textarea>
+                    onChange={e => emit?.({ type: 'summary.change', value: e.target.value })}
+                />
             </section>
         </div>
     )

@@ -12,6 +12,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      animation: {
+        'wiggle-fast': 'wiggle .15s'
+      }
     },
   },
   plugins: [],

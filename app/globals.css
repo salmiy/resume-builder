@@ -7,13 +7,6 @@
   --foreground: #171717;
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
 body {
   color: var(--foreground);
   background: var(--background);
@@ -29,48 +22,56 @@ button {
 }
 
 .custom-scrollbar {
-  scrollbar-color: #229595 transparent;
+  scrollbar-color: transparent transparent;
   scrollbar-width: thin;
   scrollbar-gutter: stable;
+  transition: all 300ms;
 }
+
+.custom-scrollbar:hover {
+  scrollbar-color: #a1a1a155 transparent;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #229595;
   border-radius: 4rem;
 }
 
-
-
-.bg-E5E7EB { background-color: #E5E7EB; }
-
-.peer ~ .block {
+.peer~.block {
   background-color: #aaa;
 }
-.peer:checked ~ .dot {
+
+.peer:checked~.dot {
   background-color: #f9f871;
   transform: translate(100%);
 }
-.peer:checked ~ .block {
+
+.peer:checked~.block {
   background-color: #263f3f;
 }
 
+.ltr {
+  direction: ltr;
+}
 
-
-.ltr { direction: ltr; }
-.rtl { direction: rtl; }
-
+.rtl {
+  direction: rtl;
+}
 
 .shadow {
   box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
-      0 2px 2px hsl(0deg 0% 0% / 0.075),
-      0 4px 4px hsl(0deg 0% 0% / 0.075),
-      0 8px 8px hsl(0deg 0% 0% / 0.075),
-      0 16px 16px hsl(0deg 0% 0% / 0.075);
+    0 2px 2px hsl(0deg 0% 0% / 0.075),
+    0 4px 4px hsl(0deg 0% 0% / 0.075),
+    0 8px 8px hsl(0deg 0% 0% / 0.075),
+    0 16px 16px hsl(0deg 0% 0% / 0.075);
 }
 
 
@@ -89,12 +90,13 @@ button {
 
   transition: all .4s cubic-bezier(0.68, -0.6, 0.32, 1.6) 50ms, background 50ms;
   box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
-      0 2px 2px hsl(0deg 0% 0% / 0.075),
-      0 4px 4px hsl(0deg 0% 0% / 0.075),
-      0 8px 8px hsl(0deg 0% 0% / 0.075),
-      0 16px 16px hsl(0deg 0% 0% / 0.075);
+    0 2px 2px hsl(0deg 0% 0% / 0.075),
+    0 4px 4px hsl(0deg 0% 0% / 0.075),
+    0 8px 8px hsl(0deg 0% 0% / 0.075),
+    0 16px 16px hsl(0deg 0% 0% / 0.075);
   overflow: hidden;
 }
+
 #control.collapsed {
   height: 4rem;
   width: 4rem;
@@ -102,117 +104,16 @@ button {
   place-content: center;
   cursor: pointer;
 }
-@media print {
-  #control {
-      display: none;
-  }
-}
-
-
-
-
-
-#control .list-wrapper {
-  padding: 3rem;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-}
-#control .list {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  font-size: 2rem;
-  font-weight: 200;
-  color: #eee;
-  flex: 1;
-  justify-content: center;
-  margin: auto;
-}
-#control .list li {
-  display: flex;
-  position: relative;
-  top: 0;
-  cursor: pointer;
-  transition: all .25s ease var(--delay, .3s),
-              opacity .25s ease var(--delay, .3s),
-              top .25s ease var(--delay, .3s);
-}
-#control .list li span {
-  position: relative;
-  transition: all .25s ease;
-  left: 0;
-}
-#control .list li.hidden {
-  opacity: 0;
-  transition: all .25s ease, opacity .25s ease, top .25s ease 0s;
-}
-#control .list li.visible {
-  cursor: initial;
-}
-#control .list li.visible span {
-  left: 50% !important;
-  transform: translateX(-50%);
-}
-#control .list li.visible div {
-  display: none;
-}
-#control .list li div {
-  height: 1px;
-  width: 0;
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  background: #eee;
-  transition: all .3s ease-out;
-}
-#control .list li:hover div {
-  width: 100%;
-}
-
-/* ************************************************ */
-
-#control #content {
-  --height: 4.5rem;
-  position: absolute;
-  top: var(--height);
-  height: calc(100% - var(--height));
-  width: 100%;
-  flex: 1;
-  background-color: #eee;
-  border-radius: 2rem;
-  transform: scale(0);
-  opacity: 0;
-  transition: all .3s ease-in-out;
-  transform-origin: bottom center;
-  overflow: hidden;
-}
-#control #content.visible {
-  transform: scale(1);
-  opacity: 1;
-  transition: all .3s ease-in-out .15s;
-}
-
-/* #control textarea {
-  padding: .5rem 1rem;
-  border: none;
-  border-bottom: 1px solid #c0c0c0;
-  font-size: 1.1rem;
-  font-weight: 300;
-  color: #333;
-  outline: none;
-  background-color: transparent;
-} */
-
 
 #contact-info-links .delete-link {
   margin-left: auto;
 }
+
 #contact-info-links .delete-link:hover {
   animation: wiggle .15s ease;
+
 }
+
 #resumeUI {
   max-width: 210mm;
   min-width: 210mm;
@@ -221,35 +122,104 @@ button {
   display: flex;
   flex-direction: column;
 }
+
 .me {
   height: 40mm;
   background-color: beige;
   display: flex;
 }
-.content { flex: 1; }
+
+.content {
+  flex: 1;
+}
+
 .side {
   width: 65mm;
   background-color: azure;
 }
-#resumeUI > .content .main {
-  flex:  1;
+
+#resumeUI>.content .main {
+  flex: 1;
   background-color: rgb(250, 172, 78);
 }
 
-
 @keyframes wiggle {
-  0% { transform: rotate(0deg); }
- 10% { transform: rotate(0deg); }
- 45% { transform: rotate(10deg); }
- 85% { transform: rotate(-10deg); }
-100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  10% {
+    transform: rotate(0deg);
+  }
+
+  45% {
+    transform: rotate(10deg);
+  }
+
+  85% {
+    transform: rotate(-10deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 
 
 @media print {
   @page {
-      size: A4;
-      margin: 1mm;
+    size: A4;
+    margin: 1mm;
   }
+
+  #control {
+    display: none;
+  }
+}
+
+
+
+
+input[type=range] {
+  position: relative;
+  display: flex;
+  height: 2rem;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 88rem;
+  overflow: hidden;
+  background-color: transparent;
+}
+input[type=range]::-moz-range-track {
+  background: rgba(218, 165, 32, 0);
+  height: 100%;
+  border-radius: 3rem;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  background: #22222200;
+  height: 100%;
+  border-radius: 3rem;
+  cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 2rem;
+  height: 2rem;
+  background-color: yellow;
+  border-radius: 88rem;
+  cursor: pointer;
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  width: 2rem;
+  height: 2rem;
+  background-color: rgb(107 33 168);
+  border-radius: 88rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
 }

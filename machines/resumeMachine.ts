@@ -6,6 +6,24 @@ export type SocialLink = {
     userId: string,
     url: string
 }
+
+export type TechnologyEntry = {
+    icon: string,
+    name: string
+}
+
+export type ExperienceEntry = {
+    enabled?: boolean,
+    position: string,
+    company: string,
+    location: string,
+    startDate: string,
+    endDate: string,
+    description: string,
+    bulletPoints: string[],
+    technologies: TechnologyEntry[]
+}
+
 export type DataScheme = {
     basics: {
         image: string,
@@ -25,7 +43,7 @@ export type DataScheme = {
     },
     experience: {
         enabled: boolean,
-        data: Array<{}>
+        data: ExperienceEntry[]
     }
 }
 
@@ -80,6 +98,10 @@ const resumeMachine = createMachine({
             | { type: 'links.enable', value: boolean }
             | { type: 'link.add', value: SocialLink }
             | { type: 'link.delete', value: Number }
+            | { type: 'experience.enable', value: boolean }
+            | { type: 'experience.add', value: ExperienceEntry }
+            | { type: 'experience.delete', value: number }
+            | { type: 'experience.update', index: number, value: Partial<ExperienceEntry> }
         
     },
     context: initialContext,
@@ -160,6 +182,43 @@ const resumeMachine = createMachine({
                         }
                     }
                 }
+            })
+        },
+        'experience.enable': {
+            actions: assign({
+                experience: ({context, event}) => ({
+                    ...context.experience,
+                    enabled: event.value
+                })
+            })
+        },
+        'experience.add': {
+            actions: assign({
+                experience: ({context, event}) => ({
+                    ...context.experience,
+                    data: [
+                        ...context.experience.data,
+                        { ...event.value, enabled: true }
+                    ]
+                })
+            }),
+        },
+        'experience.delete': {
+            actions: assign({
+                experience: ({context, event}) => ({
+                    ...context.experience,
+                    data: context.experience.data.filter((_, i) => i != event.value)
+                })
+            })
+        },
+        'experience.update': {
+            actions: assign({
+                experience: ({context, event}) => ({
+                    ...context.experience,
+                    data: context.experience.data.map(
+                        (e, i) => i != event.index ? e : { ...e, ...event.value }
+                    )
+                })
             })
         }
     }
