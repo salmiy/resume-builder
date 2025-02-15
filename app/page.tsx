@@ -7,12 +7,14 @@ import { MachineStoreContext, MachineEmitterContext } from '@/context/machineCon
 
 export default function Home() {
   const [state, send] = useMachine(resumeMachine)
+
   return (
     <MachineStoreContext.Provider value={state.context}>
-        <ResumeUI />
+      <ResumeUI mstate={state.value} />
+      {state.value == 'composingResume' &&
         <MachineEmitterContext.Provider value={send}>
-            <Control />
-        </MachineEmitterContext.Provider>
+          <Control />
+        </MachineEmitterContext.Provider>}
     </MachineStoreContext.Provider>
   );
 }

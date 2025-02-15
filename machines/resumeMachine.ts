@@ -129,10 +129,14 @@ const initialContext: DataScheme = {
 
 
 const resumeMachine = createMachine({
+    /** @xstate-layout N4IgpgJg5mDOIC5QGMD2A7ALgQ2ZgBAJboBmqAxADarYQDaADALqKgAOqshmhGrIAD0QBOAEwA6AGwBGBgA5hk4cOkB2aaIAscgDQgAnolEBWZeIYBmdcNUWLDW5IC+TvWiy4CxMuQBG2LmRYcQBXNghsTDBGFiQQDi4ePjihBElJcWMLYWyGLNFhBzlNPUMEE0txUVFZBm0rBjyXNwwcPCJSClgQgFse7AAnfXEwdGxfSmjmfgTuXnR+VOM5c1Vl42lNarkTaWlSo00HcSPtDQtNC1FVTWaQdzavTvJuvsHhsIiomJnOOeTQEsMmsbmI6spRHk5JIDuULHtMnJodJhMVhMYtqo7g9PB0fGABGwwANCKNkGARmMJlNYuw-kkFilEBsTqo6gpNMJtJobsVYdVpMZxKpVFprhZjMsNNjWrjvBQCUSSWSKbR6NM4rMGYtEDJhVZFA4wXULDCDEY9sJxOjJKILtDIXIHDKPO15eRFcTSehyeIIGBJt8NXTEvMdQgsuZ7OLMSoNsZ+QwtOJNo0tqa5BKXY88QrCV6VaFwpEab9QwDBMyGCnjDV7BoUVtFLCUaIVlcLGi5DcZNDs3LnpAQshIvNKeNJj9NfSw0yI0L7Aoak6HFK5AnzQhpJmJMYHJJjLYnUjVHJ+27BxBh6OMOI1VOQ-9GYDdULDyoGIKroochuympTSkFRNEkbRu0FdJzyefErxHBk-QDMAg1peIZwrIFxHArY1FRa4QL-RBpFA6tu1rUVsguEwz1ce5ZQvGDr3gz4SwfVDy2fSsIwsa1CmMW1MXXU0zX-DEhTyQpVFRZQlG0KDcyoYgAGtglGCdIFYrVZxfNIrTWHJ7HUOxTVPFtNE5KothPI5TEkTs5PdSglLvCB1RQzT0MQJFMiUT8iIFSRLAsFsJW4rZ0i5FRqiuLEaJxeiKEc9BFKLL5S2ndjw1UDJUXhYosskSSZGEFsTFUKRZD3LRtz3NR7OeRLkv9QM0sfbU50kzCZDsbdu3w0CWyI6RhS5ewIR5NkYpaV1oK6RTCEoSgVKpSZXLLJ9w0kFYGCUOxTDqXy7RbbahRsOQ9hueFLBsOqfFgOaFuc1b0vWuduyjQp+NNCUf1hGxq0GsROSsRdnFiuiZpee7KBSljgzYl7tLWE491rIyNDM2FevEC5DyuMyJRFUGppzd07vm6GmqQlr4baxH23hTtrk-dICIQEUVlrdFsgi4pILB6b5MobB0CgEJsBgJa1Ke1qtM48y22kU18dFFQ+U3TaJEMi4bj4vY+JuhLhdF8XVRcjS0I41JNqqDYGEKH9iKCzdlgyBR1AxRQ7WKajiYHHwhZFsWYBh5C1tpzi+KkA9RACgp0VPQoSk3TkhvkO3+M2g9bn5kn6qNoOKUp0PnvDpYrQxC5LACyUNlkYTEGyIUY55JQbE5O1RAN8gAAtUF8XxSUl6lpZp2WljK20dkPWxNEPNQ6n5MwzPXEUzlbbPffinu+98YZ7zh9zLcQDq4+PWf5ClVnIW42yvc5XqZCJ2iBfdXv+4+Yti5ljy0jK9QNAPFkWQs8ahHTKmdIqWgci2HkF3N+u8ELNXNhldq1ZTA1CgZ+ECtoSouBougVA-p4BxDijNMOY9EAAFp9ibhjmdTCWROy4TMgVA24g0A9FmCLAASnAXoYByE-z3FIC4qJNrqHSFYPi-IspWn2gVDu+NQJsKiJwoWUQAAiYAABuAZUBsGIFAQRR8EA8n5DsMqjC9w7BkAnPBTggA */
     id: "contact info",
+    initial: 'composingResume',
     types: {
         context: {} as DataScheme,
-        events: {} as { type: 'basics.update', value: string, field: string}
+        events: {} as { type: 'createTemplate'}
+            | { type: 'load', value: DataScheme }
+            | { type: 'basics.update', value: string, field: string}
             | { type: 'summary.enable', value: boolean }
             | { type: 'summary.update', value: string }
             | { type: 'experience.enable', value: boolean }
@@ -163,6 +167,9 @@ const resumeMachine = createMachine({
     },
     context: initialContext,
     on: {
+        'load': {
+            actions: assign(({context, event}) => ({...context, ...event.value}))
+        },
         'basics.update': {
             actions: assign({
                 basics:  ({context, event}) => ({
@@ -439,6 +446,14 @@ const resumeMachine = createMachine({
                 })
             }),
         },
+    },
+    states: {
+        composingResume: {
+            on: {
+                createTemplate: { target: 'templateDeveloping' }
+            }
+        },
+        templateDeveloping: {}
     }
 })
 

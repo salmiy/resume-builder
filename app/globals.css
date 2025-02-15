@@ -77,35 +77,6 @@ button {
 }
 
 
-#control {
-  position: fixed;
-  bottom: 30px;
-  left: 30px;
-  height: 30rem;
-  width: 25rem;
-  background-color: #263f3f;
-  color: silver;
-  border-radius: 2rem;
-  font-family: Montserrat;
-  display: flex;
-  flex-direction: column;
-
-  transition: all .4s cubic-bezier(0.68, -0.6, 0.32, 1.6) 50ms, background 50ms;
-  box-shadow: 0 1px 1px hsl(0deg 0% 0% / 0.075),
-    0 2px 2px hsl(0deg 0% 0% / 0.075),
-    0 4px 4px hsl(0deg 0% 0% / 0.075),
-    0 8px 8px hsl(0deg 0% 0% / 0.075),
-    0 16px 16px hsl(0deg 0% 0% / 0.075);
-  overflow: hidden;
-}
-
-#control.collapsed {
-  height: 4rem;
-  width: 4rem;
-  display: grid;
-  place-content: center;
-  cursor: pointer;
-}
 
 #contact-info-links .delete-link {
   margin-left: auto;
