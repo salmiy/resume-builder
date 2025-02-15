@@ -12,6 +12,11 @@ const ImageInput = (props: {
     const [url, setUrl] = useState('')
     const [image, setImage] = useState(props.value)
 
+    useEffect(() => {
+        if (props.value)
+            setUrl(props.value)
+    }, [props.value])
+
     function onPictureChange(e: ChangeEvent<HTMLInputElement>) {
         const input = e.target as HTMLInputElement
         if (!input.files) return

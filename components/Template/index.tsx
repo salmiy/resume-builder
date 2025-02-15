@@ -1,5 +1,5 @@
 import { useMachineStore } from "@/context/machineContexts";
-import { DataScheme, SocialLink } from "@/machines/resumeMachine";
+import { DataScheme, SocialLinkEntry } from "@/machines/resumeMachine";
 import { Alice } from "next/font/google";
 
 const alice = Alice({
@@ -30,7 +30,7 @@ function Me() {
 function Side() {
     const { basics }: DataScheme = useMachineStore();
     return (
-        <div className="column flex flex-col p-3 pt-0 w-[65mm] font-[family-name:var(--font-alice)]">
+        <div className="column flex flex-col p-3 pt-0 w-[70mm] font-[family-name:var(--font-alice)]">
             {
                 basics.summary.enabled && 
                 <section>

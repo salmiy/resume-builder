@@ -1,36 +1,26 @@
 
 import React, { useState, JSX } from 'react';
 import Basics from './Basics';
-import SocialLinks from './SocialLinks';
+import SocialLinkEntrys from './SocialLinks';
 import Experience from './Experience';
 import Skills from './Skills';
+import Languages from './Languages';
+import Hobbies from './Hobbies';
+import Education from './Education';
 
 interface Category {
     name: string,
-    form: JSX.Element
+    component: JSX.Element
 }
 
-const categories = [
-    {
-        name: "Basics",
-        form: <Basics />
-    },
-    {
-        name: "Social Links",
-        form: <SocialLinks />
-    },
-    {
-        name: "Experience",
-        form: <Experience />
-    },
-    {
-        name: "Education",
-        form: <Skills />
-    },
-    {
-        name: "Skills",
-        form: <Skills />
-    },
+const categories: Category[] = [
+    { name: "Basics", component: <Basics /> },
+    { name: "Social Links", component: <SocialLinkEntrys /> },
+    { name: "Experience", component: <Experience /> },
+    { name: "Education", component: <Education /> },
+    { name: "Skills", component: <Skills /> },
+    { name: "Languages", component: <Languages /> },
+    { name: "Hobbies", component: <Hobbies /> },
 ]
 
 export default function Control() {
@@ -58,7 +48,7 @@ export default function Control() {
 
     return (
         <div id="control" className={collapsed ? 'collapsed' : ''} >
-            <header className={`flex items-center bg-[#263f3f] top-0 left-0 ${collapsed?'static h-16 w-16 justify-center p-0':'absolute w-full h-[4.25rem] p-4'}`}>
+            <header className={`flex items-center bgf-[#263f3f] top-0 left-0 ${collapsed?'static h-16 w-16 justify-center p-0':'absolute w-full h-[4.25rem] p-4'}`}>
                 <button 
                     id="open"
                     className={`h-10 w-10 fill-none stroke-[#eee] stroke-2 p-2 ${collapsed?'flex':'hidden'}`}
@@ -97,7 +87,7 @@ export default function Control() {
 
             {
                 collapsed ||
-                <div className="p-12 overflow-auto flex flex-col items-center h-full">
+                <div className={`custom-scrollbar px-12 py-24 flex flex-col items-center h-full ${shownCat? "overflow-hidden":"overflow-auto"}`}>
                     <ul className="flex flex-col gap-8 text-4xl text-[#eee] flex-grow justify-center m-auto">
                         { createCategories() }
                     </ul>
@@ -105,7 +95,7 @@ export default function Control() {
             }
             <div className={`absolute top-[4.25rem] h-[calc(100%-4.25rem)] w-full flex-grow bg-[#eee] border-4 border-solid border-[#ccc] rounded-[2rem] transition-all duration-300 origin-bottom overflow-hidden ${shownCat ? "scale-100 opacity-100 delay-150" : "scale-0 opacity-0"}`}>
                 <div className="custom-scrollbar overflow-auto h-full w-full text-[#222]">
-                    {shownCat && shownCat.form}
+                    {shownCat && shownCat.component}
                 </div>
             </div>
 

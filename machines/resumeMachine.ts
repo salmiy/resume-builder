@@ -1,17 +1,16 @@
-import { createMachine, assign, enqueueActions } from "xstate";
+import { createMachine, assign } from "xstate";
 
-export type SocialLink = {
+export type SocialLinkEntry = {
+    enabled?: boolean,
     icon: string,
     name: string,
     userId: string,
     url: string
 }
-
 export type TechnologyEntry = {
     icon: string,
     name: string
 }
-
 export type ExperienceEntry = {
     enabled?: boolean,
     position: string,
@@ -22,6 +21,30 @@ export type ExperienceEntry = {
     description: string,
     bulletPoints: string[],
     technologies: TechnologyEntry[]
+}
+export type EducationEntry = {
+    enabled?: boolean,
+    degree: string,
+    university: string,
+    location: string,
+    startDate: string,
+    endDate: string,
+    bulletPoints: string[]
+}
+export type SkillEntry = {
+    enabled?: boolean,
+    name: string,
+    category: string,
+    rating: number
+}
+export type LanguageEntry = {
+    enabled?: boolean,
+    name: string,
+    rating: number
+}
+export type HobbyEntry = {
+    enabled?: boolean,
+    name: string
 }
 
 export type DataScheme = {
@@ -35,15 +58,31 @@ export type DataScheme = {
         summary: {
             enabled: boolean,
             data: string,
-        },
-        links: {
-            enabled: boolean,
-            data: Array<SocialLink>
         }
     },
     experience: {
         enabled: boolean,
         data: ExperienceEntry[]
+    },
+    education: {
+        enabled: boolean,
+        data: EducationEntry[]
+    },
+    links: {
+        enabled: boolean,
+        data: SocialLinkEntry[]
+    },
+    skills: {
+        enabled: boolean,
+        data: SkillEntry[]
+    },
+    languages: {
+        enabled: boolean,
+        data: LanguageEntry[]
+    },
+    hobbies: {
+        enabled: boolean,
+        data: HobbyEntry[]
     }
 }
 
@@ -58,71 +97,79 @@ const initialContext: DataScheme = {
         summary: {
             enabled: true,
             data: "",
-        },
-        links: {
-            enabled: true,
-            data: [
-                {
-                    icon: "https://i.pinimg.com/736x/93/fd/a4/93fda4257dbfd4412650d51641172782.jpg",
-                    name: "Facebook",
-                    userId: "jst.jsph",
-                    url: "https://www.facebook.com/profile?user=jst.jsph",
-                },
-                {
-                    icon: "https://i.pinimg.com/736x/93/fd/a4/93fda4257dbfd4412650d51641172782.jpg",
-                    name: "Instagram",
-                    userId: "jst.jsph",
-                    url: "https://www.facebook.com/profile?user=jst.jsph",
-                },
-            ]
         }
     },
     experience: {
         enabled: true,
         data: []
-    }
+    },
+    education: {
+        enabled: true,
+        data: []
+    },
+    links: {
+        enabled: true,
+        data: []
+    },
+    skills: {
+        enabled: true,
+        data: []
+    },
+    languages: {
+        enabled: true,
+        data: []
+    },
+    hobbies: {
+        enabled: true,
+        data: []
+    },
 };
+
+
+
 
 const resumeMachine = createMachine({
     id: "contact info",
     types: {
         context: {} as DataScheme,
-        events: {} as { type: 'image.change', value: string }
-            | { type: 'name.change', value: string }
-            | { type: 'email.change', value: string }
-            | { type: 'phone.change', value: string }
-            | { type: 'address.change', value: string }
-            | { type: 'title.change', value: string }
+        events: {} as { type: 'basics.update', value: string, field: string}
             | { type: 'summary.enable', value: boolean }
-            | { type: 'summary.change', value: string }
-            | { type: 'links.enable', value: boolean }
-            | { type: 'link.add', value: SocialLink }
-            | { type: 'link.delete', value: Number }
+            | { type: 'summary.update', value: string }
             | { type: 'experience.enable', value: boolean }
             | { type: 'experience.add', value: ExperienceEntry }
             | { type: 'experience.delete', value: number }
             | { type: 'experience.update', index: number, value: Partial<ExperienceEntry> }
+            | { type: 'education.enable', value: boolean }
+            | { type: 'education.add', value: EducationEntry }
+            | { type: 'education.delete', value: number }
+            | { type: 'education.update', index: number, value: Partial<EducationEntry> }
+            | { type: 'links.enabled', value: boolean }
+            | { type: 'link.add', value: SocialLinkEntry }
+            | { type: 'link.update', id: string, value: SocialLinkEntry }
+            | { type: 'link.delete', id: string }
+            | { type: 'hobbies.enabled', value: boolean }
+            | { type: 'hobby.add', value: HobbyEntry }
+            | { type: 'hobby.update', id: string, value: HobbyEntry }
+            | { type: 'hobby.delete', id: string }
+            | { type: 'skills.enabled', value: boolean }
+            | { type: 'skill.add', value: SkillEntry }
+            | { type: 'skill.update', id: string, value: SkillEntry }
+            | { type: 'skill.delete', id: string }
+            | { type: 'languages.enabled', value: boolean }
+            | { type: 'language.add', value: LanguageEntry }
+            | { type: 'language.update', id: string, value: LanguageEntry }
+            | { type: 'language.delete', id: string }
         
     },
     context: initialContext,
     on: {
-        'image.change': {
-            actions: { type: 'assignToContext', params: {key: 'image'} }
-        },
-        'name.change': {
-            actions: { type: 'assignToContext', params: { key: 'name' } }
-        },
-        'email.change': {
-            actions: { type: 'assignToContext', params: {key: 'email'}}
-        },
-        'phone.change': {
-            actions: { type: 'assignToContext', params: {key: 'phone'} }
-        },
-        'address.change': {
-            actions: { type: 'assignToContext', params: {key: 'address'} }
-        },
-        'title.change': {
-            actions: { type: 'assignToContext', params: {key: 'title'} }
+        'basics.update': {
+            actions: assign({
+                basics:  ({context, event}) => ({
+                    ...context.basics,
+                    [event.field]: event.value
+                })
+            })
         },
         'summary.enable': {
             actions: assign({
@@ -135,7 +182,7 @@ const resumeMachine = createMachine({
                 })
             })
         },
-        'summary.change': {
+        'summary.update': {
             actions: assign({
                 basics: ({context, event}) => ({
                     ...context.basics,
@@ -144,44 +191,6 @@ const resumeMachine = createMachine({
                         data: event.value
                     }
                 })
-            })
-        },
-        'links.enable': {
-            actions: assign({
-                basics: ({context, event}) => ({
-                    ...context.basics,
-                    links: {
-                        ...context.basics.links,
-                        enabled: event.value
-                    }
-                })
-            })
-        },
-        'link.add': {
-            actions: assign({
-                basics: ({context, event}) => {
-                    return {
-                        ...context.basics,
-                        links: {
-                            enabled: context.basics.links.enabled,
-                            data: [...context.basics.links.data, event.value]
-                        }
-                    }
-                }
-            })
-        },
-        'link.delete': {
-            actions: assign({
-                basics: ({context, event}) => {
-                    console.log(context, event)
-                    return {
-                        ...context.basics,
-                        links: {
-                            enabled: context.basics.links.enabled,
-                            data: context.basics.links.data.filter((_, idx) => idx != event.value)
-                        }
-                    }
-                }
             })
         },
         'experience.enable': {
@@ -220,19 +229,216 @@ const resumeMachine = createMachine({
                     )
                 })
             })
-        }
-    }
-}, {
-    actions: {
-        assignToContext: enqueueActions(({enqueue, context, event}, params) => {
-            console.log(event)
-            enqueue.assign({
-                basics:  {
-                    ...context.basics,
-                    [(params as {key: string}).key]: event.value
-                }
+        },
+        'education.enable': {
+            actions: assign({
+                education: ({context, event}) => ({
+                    ...context.education,
+                    enabled: event.value
+                })
             })
-        })
+        },
+        'education.add': {
+            actions: assign({
+                education: ({context, event}) => ({
+                    ...context.education,
+                    data: [
+                        ...context.education.data,
+                        { ...event.value, enabled: true }
+                    ]
+                })
+            }),
+        },
+        'education.delete': {
+            actions: assign({
+                education: ({context, event}) => ({
+                    ...context.education,
+                    data: context.education.data.filter((_, i) => i != event.value)
+                })
+            })
+        },
+        'education.update': {
+            actions: assign({
+                education: ({context, event}) => ({
+                    ...context.education,
+                    data: context.education.data.map(
+                        (e, i) => i != event.index ? e : { ...e, ...event.value }
+                    )
+                })
+            })
+        },
+        'links.enabled': {
+            actions: assign({
+                links: ({context, event}) => ({
+                    ...context.links,
+                    enabled: event.value
+                })
+            }),
+        },
+        'link.add': {
+            actions: assign({
+                links: ({context, event}) => ({
+                    ...context.links,
+                    data: [
+                        ...context.links.data.filter(s => s.name != event.value.name),
+                        { ...event.value, enabled: true }
+                    ]
+                })
+            }),
+        },
+        'link.update': {
+            actions: assign({
+                links: ({context, event}) => ({
+                    ...context.links,
+                    data: [
+                        ...context.links.data.filter(s => s.name != event.id),
+                        { 
+                            ...context.links.data.find(s => s.name == event.id),
+                            ...event.value
+                        }
+                    ]
+                })
+            }),
+        },
+        'link.delete': {
+            actions: assign({
+                links: ({context, event}) => ({
+                    ...context.links,
+                    data: [
+                        ...context.links.data.filter(s => s.name != event.id)
+                    ]
+                })
+            }),
+        },
+        'skills.enabled': {
+            actions: assign({
+                skills: ({context, event}) => ({
+                    ...context.skills,
+                    enabled: event.value
+                })
+            }),
+        },
+        'skill.add': {
+            actions: assign({
+                skills: ({context, event}) => ({
+                    ...context.skills,
+                    data: [
+                        ...context.skills.data.filter(s => s.name != event.value.name),
+                        { ...event.value, enabled: true }
+                    ]
+                })
+            }),
+        },
+        'skill.update': {
+            actions: assign({
+                skills: ({context, event}) => ({
+                    ...context.skills,
+                    data: [
+                        ...context.skills.data.filter(s => s.name != event.id),
+                        { 
+                            ...context.skills.data.find(s => s.name == event.id),
+                            ...event.value
+                        }
+                    ]
+                })
+            }),
+        },
+        'skill.delete': {
+            actions: assign({
+                skills: ({context, event}) => ({
+                    ...context.skills,
+                    data: [
+                        ...context.skills.data.filter(s => s.name != event.id)
+                    ]
+                })
+            }),
+        },
+        'languages.enabled': {
+            actions: assign({
+                languages: ({context, event}) => ({
+                    ...context.languages,
+                    enabled: event.value
+                })
+            }),
+        },
+        'language.add': {
+            actions: assign({
+                languages: ({context, event}) => ({
+                    ...context.languages,
+                    data: [
+                        ...context.languages.data.filter(l => l.name != event.value.name),
+                        { ...event.value, enabled: true }
+                    ]
+                })
+            }),
+        },
+        'language.update': {
+            actions: assign({
+                languages: ({context, event}) => ({
+                    ...context.languages,
+                    data: [
+                        ...context.languages.data.filter(l => l.name != event.id),
+                        { 
+                            ...context.languages.data.find(l => l.name == event.id),
+                            ...event.value
+                        }
+                    ]
+                })
+            }),
+        },
+        'language.delete': {
+            actions: assign({
+                languages: ({context, event}) => ({
+                    ...context.languages,
+                    data: [
+                        ...context.languages.data.filter(l => l.name != event.id)
+                    ]
+                })
+            }),
+        },
+        'hobbies.enabled': {
+            actions: assign({
+                hobbies: ({context, event}) => ({
+                    ...context.hobbies,
+                    enabled: event.value
+                })
+            }),
+        },
+        'hobby.add': {
+            actions: assign({
+                hobbies: ({context, event}) => ({
+                    ...context.hobbies,
+                    data: [
+                        ...context.hobbies.data.filter(l => l.name != event.value.name),
+                        { ...event.value, enabled: true }
+                    ]
+                })
+            }),
+        },
+        'hobby.update': {
+            actions: assign({
+                hobbies: ({context, event}) => ({
+                    ...context.hobbies,
+                    data: [
+                        ...context.hobbies.data.filter(l => l.name != event.id),
+                        { 
+                            ...context.hobbies.data.find(l => l.name == event.id),
+                            ...event.value
+                        }
+                    ]
+                })
+            }),
+        },
+        'hobby.delete': {
+            actions: assign({
+                hobbies: ({context, event}) => ({
+                    ...context.hobbies,
+                    data: [
+                        ...context.hobbies.data.filter(l => l.name != event.id)
+                    ]
+                })
+            }),
+        },
     }
 })
 

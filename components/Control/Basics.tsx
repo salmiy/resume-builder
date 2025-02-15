@@ -16,9 +16,10 @@ export default function Basics() {
 
     useAutosizeTextArea(taRef.current, basics.summary.data)
 
-    function onInputChange(eventType: string, e: ChangeEvent<HTMLInputElement>) {
+    function onInputChange(field: string, e: ChangeEvent<HTMLInputElement>) {
         emit?.({
-            type: eventType,
+            type: 'basics.update',
+            field,
             value: e.target.value
         })
     }
@@ -34,19 +35,19 @@ export default function Basics() {
             <div className="flex flex-col gap-2">
                 <TextInput 
                     placeholder='Full Name' className='capitalize'
-                    value={basics.name} onChange={e => onInputChange('name.change', e)} />
+                    value={basics.name} onChange={e => onInputChange('name', e)} />
                 <TextInput 
                     placeholder='Email' className='capitalize'
-                    value={basics.email} onChange={e => onInputChange('email.change', e)} />
+                    value={basics.email} onChange={e => onInputChange('email', e)} />
                 <TextInput 
                     placeholder='Phone' className='capitalize'
-                    value={basics.phone} onChange={e => onInputChange('phone.change', e)} />
+                    value={basics.phone} onChange={e => onInputChange('phone', e)} />
                 <TextInput 
                     placeholder='Address' className='capitalize'
-                    value={basics.address} onChange={e => onInputChange('address.change', e)} />
+                    value={basics.address} onChange={e => onInputChange('address', e)} />
                 <TextInput 
                     placeholder='Title (eg. Software Engineer)' className='capitalize'
-                    value={basics.title} onChange={e => onInputChange('title.change', e)} />
+                    value={basics.title} onChange={e => onInputChange('title', e)} />
             </div>
 
             <section className='flex flex-col mt-6'>
@@ -57,7 +58,7 @@ export default function Basics() {
                 <AutoResizeTextArea
                     placeholder='Summary....'
                     value={basics.summary.data}
-                    onChange={e => emit?.({ type: 'summary.change', value: e.target.value })}
+                    onChange={e => emit?.({ type: 'summary.update', value: e.target.value })}
                 />
             </section>
         </div>

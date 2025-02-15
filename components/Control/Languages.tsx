@@ -1,46 +1,20 @@
 
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
-import { DataScheme, SkillEntry } from '@/machines/resumeMachine';
+import { DataScheme, LanguageEntry } from '@/machines/resumeMachine';
 import TextInput from '../Input';
-import Select, { SingleValue } from 'react-select'
 import RangeInput from '../RangeInput';
 
 
-interface CategoryOption { value: string, label: string }
-
-const options = [
-    { value: "technical", label: "Technical Skill" },
-    { value: "software-it", label: "Software & IT Skill" },
-    { value: "analytical-research", label: "Analytical & Research Skill" },
-    { value: "project-management", label: "Project Management Skill" },
-    { value: "marketing-sales", label: "Marketing & Sales Skill" },
-    { value: "design-creative", label: "Design & Creative Skill" },
-    { value: "soft-skill", label: "Soft Skill" },
-    { value: "finance-eccounting", label: "Finance & Accounting Skill" },
-    { value: "writing-communication", label: "Writing & Communication Skill" },
-    { value: "industry-specific", label: "Industry-Specific Skill" }
-]
-
-function findOptionByLabel(label: string | undefined) : CategoryOption | undefined
-{
-    if (!label) return undefined
-    const catlookup = options.find(o => o.label == label)
-    console.log('searching...', catlookup)
-    return catlookup
-}
-
-function SkillsForm({ skill, onUpdate }: {
-    skill?: SkillEntry, onUpdate?: () => void }
-    | { skill: SkillEntry, onUpdate: () => void 
+function LanguageForm({ language, onUpdate }: {
+    language?: LanguageEntry, onUpdate?: () => void }
+    | { language: LanguageEntry, onUpdate: () => void 
 })
 {   
-    const [name, setName] = useState(skill?.name ?? '')
-    const [rating, setRating] = useState(skill?.rating ?? 10)
-    const [category, setCategory] = useState<SingleValue<CategoryOption>>(
-        findOptionByLabel(skill?.category) ?? options[0]
-    )
+    const [name, setName] = useState(language?.name ?? '')
+    const [rating, setRating] = useState(language?.rating ?? 10)
+
     const emit = useMachineEmitter()
 
     const onSubmit = (e: FormEvent) => {
@@ -48,14 +22,13 @@ function SkillsForm({ skill, onUpdate }: {
         if (!name) return
         const value = {
             name,
-            rating,
-            category: category?.label
+            rating
         }
 
-        if (skill) {
+        if (language) {
             emit?.({
-                type: 'skill.update',
-                id: skill.name,
+                type: 'language.update',
+                id: language.name,
                 value
             })
             onUpdate?.()
@@ -63,7 +36,7 @@ function SkillsForm({ skill, onUpdate }: {
         }
 
         emit?.({
-            type: 'skill.add',
+            type: 'language.add',
             value,
         })
     }
@@ -75,57 +48,40 @@ function SkillsForm({ skill, onUpdate }: {
                 <TextInput value={name}
                     className='flex-grow'
                     onChange={e => setName(e.target.value)}
-                    placeholder="Skill" />
-                <Select
-                    options={options}
-                    className='cursor-pointer'
-                    isSearchable={true}
-                    onChange={v => setCategory(v)}
-                    value={category}
-                    classNames={{
-                        container: () => 'select-container',
-                        control: () => 'select-control',
-                        option: (s) => {
-                            return `select-option ${s.isFocused ? 'focused' : ''} ${s.isSelected ? 'selected' : ''}`
-                        },
-                        menu: () => 'select-menu'
-                    }}
-                    maxMenuHeight={200}
-                />
+                    placeholder="Language" />
                 <RangeInput
                     value={rating}
                     onChange={(val) => setRating(val)}
                 />
                 <button
                     className='py-2 bg-[#263f3f50] capitalize text-lg text-[#000] flex-grow mt-1 rounded-full shadow-sm transition-all duration-200 hover:shadow-lg hover:translate-y-[-1px]'
-                >{ skill ? 'update' : 'add' }</button>
+                >{ language ? 'update' : 'add' }</button>
             </div>
         </form>
     )
 }
 
-function SkillCard({ skill, onEdit, onDelete }: {
-    skill: SkillEntry,
+function LanguageCard({ language, onEdit, onDelete }: {
+    language: LanguageEntry,
     onEdit?: () => void,
     onDelete?: () => void
 }) {
     const emit = useMachineEmitter()
-    const full = Math.floor(skill.rating)
-    const width = (skill.rating - full) * 100
+    const full = Math.floor(language.rating)
+    const width = (language.rating - full) * 100
     return (
         <section className="flex flex-col gap-2 p-3 bg-white rounded-lg shadow-md">
             <header className="flex justify-between items-start">
                 <div className="flex flex-col">
-                    <h2 className="text-xl font-medium">{skill.name}</h2>
+                    <h2 className="text-xl font-medium">{language.name}</h2>
                 </div>
                 <Switcher
-                    initial={skill.enabled}
-                    onChange={enabled => emit?.({type:'skill.update', id: skill.name, value: {enabled}})}
+                    initial={language.enabled}
+                    onChange={enabled => emit?.({type:'language.update', id: language.name, value: {enabled}})}
                     size="sm"
                 />
             </header>
-            <h3 className="text-lg">{skill.category}</h3>
-            <div className="flex gap-1">
+            <div className="flex gap-1 mt-1">
                 {
                     [...Array(10)].map((_, idx) => {
                         if (idx < full) return (
@@ -145,7 +101,7 @@ function SkillCard({ skill, onEdit, onDelete }: {
 
                 }
             </div>
-            <div className="flex gap-3 mt-2">
+            <div className="flex gap-3 mt-1">
                 <button
                     onClick={onEdit}
                     className="group flex items-center gap-2 py-2 pl-3 pr-5 rounded-full text-base bg-[#ddd] font-medium overflow-hidden transition-all duration-300 hover:bg-blue-600 hover:text-white"
@@ -171,22 +127,22 @@ function SkillCard({ skill, onEdit, onDelete }: {
     )
 }
 
-function SkillList({ onEdit }: {
-    onEdit?: (skill:SkillEntry) => void
+function LanguageList({ onEdit }: {
+    onEdit?: (Language:LanguageEntry) => void
 })
 {
-    const { skills }: DataScheme = useMachineStore()
+    const { languages }: DataScheme = useMachineStore()
     const emit = useMachineEmitter()
 
     return (
         <div className="flex flex-col gap-3 px-3 pb-12">
             {
-                skills.data.map((skill, i) => (
-                    <SkillCard
+                languages.data.map((language, i) => (
+                    <LanguageCard
                         key={i}
-                        skill={skill}
-                        onEdit={() => onEdit?.(skill)}
-                        onDelete={() => emit?.({type: 'skill.delete', id: skill.name})}
+                        language={language}
+                        onEdit={() => onEdit?.(language)}
+                        onDelete={() => emit?.({type: 'language.delete', id: language.name})}
                     />
                 ))
             }
@@ -194,12 +150,12 @@ function SkillList({ onEdit }: {
     )
 }
 
-export default function Skills() {
-    const { skills }: DataScheme = useMachineStore()
+export default function Languages() {
+    const { languages }: DataScheme = useMachineStore()
     const send = useMachineEmitter()
 
     const [editing, setEditing] = useState(false)
-    const [skill, setSkill] = useState<SkillEntry | undefined>();
+    const [language, setLanguage] = useState<LanguageEntry | undefined>();
 
     return (
         <div>
@@ -207,34 +163,34 @@ export default function Skills() {
                 <header className="flex justify-between p-4 items-center">
                     <h3 className="text-xl font-medium">Enabled</h3>
                     <Switcher
-                        onChange={(enabled: boolean) => send?.({ type: 'skills.enabled', value: enabled })} 
-                        initial={skills.enabled}
+                        onChange={(enabled: boolean) => send?.({ type: 'languages.enabled', value: enabled })} 
+                        initial={languages.enabled}
                     />
                 </header>
                 <div className='bg-white border border-solid border-gray-300 rounded-xl shadow-md mx-2 mb-4'>
-                    <SkillsForm />
+                    <LanguageForm />
                 </div>
-                <SkillList
-                    onEdit={(s:SkillEntry) => { setEditing(true); setSkill(s)}}
+                <LanguageList
+                    onEdit={(s:LanguageEntry) => { setEditing(true); setLanguage(s)}}
                 />
 
             </section>
 
-            {/* update skill form modal */}
+            {/* update Language form modal */}
             <div className={`absolute top-0 left-0 w-full h-full justify-center items-center ${editing?'flex':'hidden'}`}>
                 <div className='flex flex-col w-[calc(100%-2rem)] gap-2'>
                     <button
-                        onClick={() => { setEditing(false); setSkill(undefined); }} 
+                        onClick={() => { setEditing(false); setLanguage(undefined); }} 
                         className='px-6 py-2 self-end bg-white border border-solid border-gray-300 rounded-full shadow-sm stroke-black transition-all duration-200 hover:shadow-lg hover:translate-y-[-1px]'>
                         <svg className="w-4" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M21 21L12 12M12 12L3 3M12 12L21.0001 3M12 12L3 21.0001"></path>
                         </svg>
                     </button>
                     <div className='bg-white border border-solid border-gray-300 rounded-xl shadow-lg'>
-                        <SkillsForm
-                            key={skill?.name + "-" + skill?.rating}
-                            skill={skill}
-                            onUpdate={() => { setEditing(false); setSkill(undefined); }}
+                        <LanguageForm
+                            key={language?.name + "-" + language?.rating}
+                            language={language}
+                            onUpdate={() => { setEditing(false); setLanguage(undefined); }}
                         />
                     </div>
                 </div>
@@ -242,20 +198,3 @@ export default function Skills() {
         </div>
     )
 }
-
-// function save(filename: string, data: any) {
-//         const blob = new Blob([data], {type: 'text/plain'});
-//         if (window.navigator.msSaveOrOpenBlob)
-//             window.navigator.msSaveBlob(blob, filename);
-//         else {
-//             const elm = document.createElement('a')
-//             elm.href = window.URL.createObjectURL(blob);
-//             elm.download = filename;
-//             elm.style.visibility = 'hidden'
-//             elm.style.zIndex = '-1111'
-//             elm.style.position = 'absolute'
-//             document.body.prepend(elm)
-//             elm.click()
-//             elm.remove()
-//         }
-//     }
