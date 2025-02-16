@@ -135,6 +135,7 @@ const resumeMachine = createMachine({
     types: {
         context: {} as DataScheme,
         events: {} as { type: 'createTemplate'}
+            | { type: 'developingFinished' }
             | { type: 'load', value: DataScheme }
             | { type: 'basics.update', value: string, field: string}
             | { type: 'summary.enable', value: boolean }
@@ -453,7 +454,11 @@ const resumeMachine = createMachine({
                 createTemplate: { target: 'templateDeveloping' }
             }
         },
-        templateDeveloping: {}
+        templateDeveloping: {
+            on: {
+                developingFinished: { target: 'composingResume'}
+            }
+        }
     }
 })
 

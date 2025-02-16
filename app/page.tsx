@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <MachineStoreContext.Provider value={state.context}>
-      <ResumeUI mstate={state.value} />
+      <ResumeUI mstate={state.value} emit={send} />
       {state.value == 'composingResume' &&
         <MachineEmitterContext.Provider value={send}>
           <Control />

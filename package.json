@@ -3,15 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 5000",
+    "dev": "next dev -p 5000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@babel/standalone": "^7.26.9",
     "@codemirror/lang-javascript": "^6.2.3",
+    "@codemirror/lang-less": "^6.0.2",
+    "@uiw/codemirror-extensions-langs": "^4.23.8",
     "@uiw/react-codemirror": "^4.23.8",
     "@xstate/react": "^5.0.2",
+    "babel-plugin-transform-scss": "^1.2.0",
+    "embla-carousel-react": "^8.5.2",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -20,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/babel__standalone": "^7.1.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
