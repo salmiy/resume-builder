@@ -1,11 +1,12 @@
 
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
 import { DataScheme, SkillEntry } from '@/machines/resumeMachine';
 import TextInput from '../Input';
 import Select, { SingleValue } from 'react-select'
 import RangeInput from '../RangeInput';
+import ImageInput from '../ImageInput';
 
 
 interface CategoryOption { value: string, label: string }
@@ -22,20 +23,21 @@ const options = [
     { value: "writing-communication", label: "Writing & Communication Skill" },
     { value: "industry-specific", label: "Industry-Specific Skill" }
 ]
+const iconBase64 = `data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzAgMzAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cGF0aAogICAgICAgIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2U9ImJsYWNrIgogICAgICAgIGQ9Ik0gNSAxNSBBIDEgMSAwIDAgMCAyNSAxNSBBIDEgMSAwIDAgMCA1IDE1IE0gNyAyMSBMIDExLjYyNSAxNS45ODcgUSAxMi42NjQgMTQuODEgMTMuNzAyIDE1Ljg4MyBMIDE3IDE5IE0gMTUgMTcgQyAxNy45MjcgMTUuNDMzIDIxLjMyIDE2Ljg1MyAyMS40MjQgMjAuNTIzIE0gMTUgOSBBIDEgMSAwIDAgMCAxNSAxMyBBIDEgMSAwIDAgMCAxNSA5Ij4KICAgIDwvcGF0aD4KPC9zdmc+`
 
-function findOptionByLabel(label: string | undefined) : CategoryOption | undefined
-{
+function findOptionByLabel(label: string | undefined): CategoryOption | undefined {
     if (!label) return undefined
     const catlookup = options.find(o => o.label == label)
     console.log('searching...', catlookup)
     return catlookup
 }
 
-function SkillsForm({ skill, onUpdate }: {
-    skill?: SkillEntry, onUpdate?: () => void }
-    | { skill: SkillEntry, onUpdate: () => void 
-})
-{   
+function SkillsForm({ skill, onUpdate } : 
+    { skill?: SkillEntry, onUpdate?: () => void }
+    | { skill: SkillEntry, onUpdate: () => void }
+)
+{
+    const [icon, setIcon] = useState(skill?.icon ?? iconBase64)
     const [name, setName] = useState(skill?.name ?? '')
     const [rating, setRating] = useState(skill?.rating ?? 10)
     const [category, setCategory] = useState<SingleValue<CategoryOption>>(
@@ -46,36 +48,39 @@ function SkillsForm({ skill, onUpdate }: {
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (!name) return
-        const value = {
-            name,
-            rating,
-            category: category?.label
-        }
+        const value = { name, rating, category: category?.label }
 
-        if (skill) {
-            emit?.({
-                type: 'skill.update',
-                id: skill.name,
-                value
-            })
-            onUpdate?.()
-            return
-        }
+        setName('')
+        setRating(10)
+        setIcon(iconBase64)
 
-        emit?.({
-            type: 'skill.add',
-            value,
-        })
+        const type = skill ? 'skill.update' : 'skill.add'
+        const payload = skill ? { id: skill.name } : {}
+
+        emit?.({ type, value, ...payload })
+        skill && onUpdate?.()
     }
-    
+
 
     return (
         <form id="contact-info-links-form" className="p-4" onSubmit={onSubmit}>
             <div className="flex flex-col gap-2">
-                <TextInput value={name}
-                    className='flex-grow'
-                    onChange={e => setName(e.target.value)}
-                    placeholder="Skill" />
+                <div className="flex gap-2 relative z-50">
+                    {
+                        category == options[1] &&
+                        <ImageInput
+                            onChange={(url: string) => setIcon(url)}
+                            key={icon || 'link-icon'}
+                            value={icon}
+                            className="h-12 w-12 rounded-xl overflow-hidden z-50 relative"
+                            optionsClassName='top-[calc(100%+0.5rem)] left-0'
+                        />
+                    }
+                    <TextInput value={name}
+                        className='flex-grow'
+                        onChange={e => setName(e.target.value)}
+                        placeholder="Skill" />
+                </div>
                 <Select
                     options={options}
                     className='cursor-pointer'
@@ -98,7 +103,7 @@ function SkillsForm({ skill, onUpdate }: {
                 />
                 <button
                     className='py-2 bg-[#263f3f50] capitalize text-lg text-[#000] flex-grow mt-1 rounded-full shadow-sm transition-all duration-200 hover:shadow-lg hover:translate-y-[-1px]'
-                >{ skill ? 'update' : 'add' }</button>
+                >{skill ? 'update' : 'add'}</button>
             </div>
         </form>
     )
@@ -120,7 +125,7 @@ function SkillCard({ skill, onEdit, onDelete }: {
                 </div>
                 <Switcher
                     initial={skill.enabled}
-                    onChange={enabled => emit?.({type:'skill.update', id: skill.name, value: {enabled}})}
+                    onChange={enabled => emit?.({ type: 'skill.update', id: skill.name, value: { enabled } })}
                     size="sm"
                 />
             </header>
@@ -172,9 +177,8 @@ function SkillCard({ skill, onEdit, onDelete }: {
 }
 
 function SkillList({ onEdit }: {
-    onEdit?: (skill:SkillEntry) => void
-})
-{
+    onEdit?: (skill: SkillEntry) => void
+}) {
     const { skills }: DataScheme = useMachineStore()
     const emit = useMachineEmitter()
 
@@ -186,7 +190,7 @@ function SkillList({ onEdit }: {
                         key={i}
                         skill={skill}
                         onEdit={() => onEdit?.(skill)}
-                        onDelete={() => emit?.({type: 'skill.delete', id: skill.name})}
+                        onDelete={() => emit?.({ type: 'skill.delete', id: skill.name })}
                     />
                 ))
             }
@@ -203,11 +207,11 @@ export default function Skills() {
 
     return (
         <div>
-            <section className={`flex flex-col text-black ${editing?"blur-md":""}`}>
+            <section className={`flex flex-col text-black ${editing ? "blur-md" : ""}`}>
                 <header className="flex justify-between p-4 items-center">
                     <h3 className="text-xl font-medium">Enabled</h3>
                     <Switcher
-                        onChange={(enabled: boolean) => send?.({ type: 'skills.enabled', value: enabled })} 
+                        onChange={(enabled: boolean) => send?.({ type: 'skills.enabled', value: enabled })}
                         initial={skills.enabled}
                     />
                 </header>
@@ -215,16 +219,16 @@ export default function Skills() {
                     <SkillsForm />
                 </div>
                 <SkillList
-                    onEdit={(s:SkillEntry) => { setEditing(true); setSkill(s)}}
+                    onEdit={(s: SkillEntry) => { setEditing(true); setSkill(s) }}
                 />
 
             </section>
 
             {/* update skill form modal */}
-            <div className={`absolute top-0 left-0 w-full h-full justify-center items-center ${editing?'flex':'hidden'}`}>
+            <div className={`absolute top-0 left-0 w-full h-full justify-center items-center ${editing ? 'flex' : 'hidden'}`}>
                 <div className='flex flex-col w-[calc(100%-2rem)] gap-2'>
                     <button
-                        onClick={() => { setEditing(false); setSkill(undefined); }} 
+                        onClick={() => { setEditing(false); setSkill(undefined); }}
                         className='px-6 py-2 self-end bg-white border border-solid border-gray-300 rounded-full shadow-sm stroke-black transition-all duration-200 hover:shadow-lg hover:translate-y-[-1px]'>
                         <svg className="w-4" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M21 21L12 12M12 12L3 3M12 12L21.0001 3M12 12L3 21.0001"></path>
@@ -242,20 +246,3 @@ export default function Skills() {
         </div>
     )
 }
-
-// function save(filename: string, data: any) {
-//         const blob = new Blob([data], {type: 'text/plain'});
-//         if (window.navigator.msSaveOrOpenBlob)
-//             window.navigator.msSaveBlob(blob, filename);
-//         else {
-//             const elm = document.createElement('a')
-//             elm.href = window.URL.createObjectURL(blob);
-//             elm.download = filename;
-//             elm.style.visibility = 'hidden'
-//             elm.style.zIndex = '-1111'
-//             elm.style.position = 'absolute'
-//             document.body.prepend(elm)
-//             elm.click()
-//             elm.remove()
-//         }
-//     }

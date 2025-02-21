@@ -29,20 +29,11 @@ function SocialLinkEntryForm({ link, onUpdate }: {
         setUserId('')
         setUrl('')
 
-        if (link) {
-            emit?.({
-                type: 'link.update',
-                id: link.name,
-                value
-            })
-            onUpdate?.()
-            return
-        }
+        const type = link ? 'link.update' : 'link.add'
+        const payload = link ? { id: link.name } : {}
 
-        emit?.({
-            type: 'link.add',
-            value,
-        })
+        emit?.({ type, value, ...payload })
+        link && onUpdate?.()
     }
     
 

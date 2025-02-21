@@ -31,8 +31,18 @@ export type EducationEntry = {
     endDate: string,
     bulletPoints: string[]
 }
+export type ProjectEntry = {
+    enabled?: boolean,
+    name: string,
+    startDate: string,
+    endDate: string,
+    description: string,
+    bulletPoints: string[],
+    technologies: TechnologyEntry[]
+}
 export type SkillEntry = {
     enabled?: boolean,
+    icon?: string,
     name: string,
     category: string,
     rating: number
@@ -382,16 +392,14 @@ const resumeMachine = createMachine({
         },
         'language.update': {
             actions: assign({
-                languages: ({context, event}) => ({
-                    ...context.languages,
-                    data: [
-                        ...context.languages.data.filter(l => l.name != event.id),
-                        { 
-                            ...context.languages.data.find(l => l.name == event.id),
-                            ...event.value
-                        }
-                    ]
-                })
+                languages: ({context, event}) => {
+                    const data = [...context.languages.data]
+                    const index = data.findIndex(l => l.name == event.id)
+                    data[index] = { ...data[index], ...event.value }
+                    return { ...context.languages,
+                        data
+                    }
+                }
             }),
         },
         'language.delete': {

@@ -24,7 +24,8 @@ function LanguageForm({ language, onUpdate }: {
             name,
             rating
         }
-
+        setName('')
+        setRating(10)
         if (language) {
             emit?.({
                 type: 'language.update',

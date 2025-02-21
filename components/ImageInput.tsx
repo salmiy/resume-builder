@@ -1,6 +1,15 @@
 
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent, useRef, useCallback } from 'react';
 import TextInput from './Input';
+
+function throttle(fn: CallableFunction, t: number) {
+    let to: NodeJS.Timeout|null = null;
+    
+    return function() {
+        if (to) clearTimeout(to)
+        to = setTimeout(() => fn(...arguments), t)
+    }
+}
 
 const ImageInput = (props: {
     value: string,
@@ -11,11 +20,18 @@ const ImageInput = (props: {
     const [options, setOptions] = useState(false)
     const [url, setUrl] = useState('')
     const [image, setImage] = useState(props.value)
+    const prevImage = useRef<string | null>(null)
 
     useEffect(() => {
         if (props.value)
             setUrl(props.value)
     }, [props.value])
+
+    const imgTmpSetFromUrl = useCallback(throttle((url: string) => {
+        if (!url) return
+        if (!prevImage.current) prevImage.current = image
+        setImage(url)
+    }, 1000), []) as (url: string) => void
 
     function onPictureChange(e: ChangeEvent<HTMLInputElement>) {
         const input = e.target as HTMLInputElement
@@ -24,32 +40,47 @@ const ImageInput = (props: {
         const file = input.files[0]
         const url = URL.createObjectURL(file);
 
+        // save prev value before first change
+        if (!prevImage.current) prevImage.current = image
+
         setUrl(url);
-        // props.onChange(url)
+        setImage(url)
+    }
+    function onInputChange(e: ChangeEvent<HTMLInputElement>) {
+        setUrl(e.target.value)
+        imgTmpSetFromUrl(e.target.value)
     }
     function onSave() {
         setOptions(false)
         if (!url) return
         
+        prevImage.current = null
         setImage(url)
         props.onChange(url)
+    }
+    function onCancel() {
+        setOptions(false)
+        if (prevImage.current && prevImage.current != image) {
+            setImage(prevImage.current)
+            prevImage.current = null
+        }
     }
 
     return (
         <div className="relative flex flex-col">
             <div
                 onClick={() => setOptions(!options)}
-                className={`flex justify-center cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] hover:scale-125 ${props.className}`}
+                className={`flex justify-center cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] hover:scale-105 ${props.className}`}
             >
                 <img className={`object-cover`} src={image} />
             </div>
             {options &&
-                <div className={`flex flex-col absolute w-56 bg-white text-whitef text-base shadow-xl rounded-xl overflow-hidden ${props.optionsClassName}`}>
+                <div className={`flex flex-col absolute w-56 bg-white text-whitef text-base shadow-xl rounded-xl overflow-hidden border border-gray-300 ${props.optionsClassName}`}>
                     <div className='flex flex-col'>
                         <div className='text-sm hidden'>url</div>
                         <TextInput
                             placeholder='url'
-                            onChange={e => setUrl(e.target.value)}
+                            onChange={onInputChange}
                         />
                     </div>
                     <div className="flex gap-2 pl-2 items-center">
@@ -70,7 +101,7 @@ const ImageInput = (props: {
                         >save</button>
                         <div className='w-[1px] bg-gray-300'></div>
                         <button
-                            onClick={() => setOptions(false)}
+                            onClick={onCancel}
                             className='flex-grow py-2 text-base border-t border-solid border-0 border-gray-300 font-medium text-[#7d1414]'>cancel</button>
                     </div>
                 </div>

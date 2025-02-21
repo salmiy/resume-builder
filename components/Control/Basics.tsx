@@ -30,7 +30,7 @@ export default function Basics() {
                 value={basics.image}
                 className="w-24 h-24 self-center mt-6 rounded-full overflow-hidden mb-2"
                 optionsClassName='top-[100%] left-[50%] translate-x-[-50%]'
-                onChange={ (url: string) => emit?.({type: "image.change", value: url})} />
+                onChange={ (url: string) => emit?.({type: "basics.update", field: 'image', value: url})} />
             
             <div className="flex flex-col gap-2">
                 <TextInput 
