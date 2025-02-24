@@ -1,4 +1,4 @@
-import { DataScheme, EducationEntry, ExperienceEntry } from "@/machines/resumeMachine";
+import { DataScheme, EducationEntry, ExperienceEntry } from "@/machines/types";
 import React from "react";
 
 
@@ -34,10 +34,10 @@ function Me({ basics }: { basics: DataScheme['basics'] }) {
 
 function Side({ data }: { data: DataScheme }) {
     const languages = data.languages.data.filter(l => l.enabled)
-    const educations = data.education.data.filter(e => e.enabled)
 
     return (
-        <div className="column flex flex-col px-3 gap-2 w-[60mm] font-[family-name:var(--font-alice)] flex-shrink-0">
+        <div className="column flex flex-col pl-3 px-1 gap-4 w-[60mm] font-[family-name:var(--font-alice)] flex-shrink-0">
+            <Links links={data.links} />
             <Skills skills={data.skills} />
             {
                 data.languages.enabled ?
@@ -81,7 +81,7 @@ function Main({ data }: { data: DataScheme }) {
                                 <h2 className="text-3xl leading-tight font-bold">Summary</h2>
                             </Segment>
                             <Segment lineClassName="bg-gradient-to-b from-blue-700 to-green-700">
-                                <p className="pt-2">{ data.basics.summary.data }</p>
+                                <p className="pt-2">{data.basics.summary.data}</p>
                             </Segment>
                             <EmptySegment className="h-3" lineClassName="bg-green-700" />
                         </section> :
@@ -134,6 +134,24 @@ function Main({ data }: { data: DataScheme }) {
 }
 
 
+function Links({ links }: { links: DataScheme['links'] }) {
+    const data = links.data.filter(l => l.enabled)
+    return (
+        links.enabled && data.length ?
+            <section key="links" className="flex gap-2 flex-wrap">
+                {
+                    data.map(link => (
+                        <a key={link.name} href={link.url} target="_blank" className="font-[family-name:var(--font-alice)] flex items-center gap-2 text-[#333] text-xl">
+                            <img src={link.icon} className="w-6 h-6 object-contain rounded-md" alt={link.name} />/
+                            <span> {link.userId}</span>
+                        </a>
+                    ))
+                }
+            </section> : <NotYetSet>Links Not Yet Set</NotYetSet>
+
+    )
+}
+
 function Skills({ skills }: { skills: DataScheme['skills'] }) {
     const softwareSkills = skills.data.filter(s => s.enabled && s.category == "Software & IT Skill")
     const otherSkills = skills.data.filter(s => s.enabled && s.category != "Software & IT Skill")
@@ -150,6 +168,7 @@ function Skills({ skills }: { skills: DataScheme['skills'] }) {
                                 softwareSkills.map(skill => (
                                     <React.Fragment key={skill.name + skill.rating}>
                                         <div className="flex gap-2 px-2 py-1 rounded-full border border-solid border-[#333] text-[#333] text-base">
+                                            {skill.icon && <img src={skill.icon} className="w-6 h-6 object-contain rounded-lg" />}
                                             {skill.name}
                                         </div>
                                     </React.Fragment>
@@ -182,17 +201,45 @@ function Skills({ skills }: { skills: DataScheme['skills'] }) {
     )
 }
 
+function Languages({ languages }: { languages: DataScheme['languages'] }) {
+    const data = languages.data.filter(l => l.enabled)
+    return (
+        languages.enabled ?
+            data.length ?
+                <section key="languages">
+                    <header>
+                        <h2 className="text-[1.75rem] leading-tight font-bold">Languages</h2>
+                    </header>
+                    <div className="flex flex-col mt-1 ml-4">
+                        {
+                            data.map((lang) => (
+                                <div key={lang.name} className="flex flex-col gap-1 text-[#333] text-lg font-medium">
+                                    <div>{lang.name}</div>
+                                    <div className="h-[4px] bg-gray-300 rounded-full overflow-hidden">
+                                        <div className="w-[var(--w)] h-full bg-yellow-600 rounded-full"
+                                            style={{ '--w': `${lang.rating * 10}%` } as React.CSSProperties}
+                                        ></div>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </section> : <NotYetSet>Languages Not Yet Set</NotYetSet>
+            : ''
+    )
+}
+
 /**
  * Experience contains:
- *  enabled?: boolean
- *  position: string,
- *  company: string,
- *  location: string,
- *  startDate: string,
- *  endDate: string,
- *  description: string,
- *  bulletPoints: string[],
- *  technologies: TechnologyEntry[]
+ *      enabled?: boolean
+ *      position: string,
+ *      company: string,
+ *      location: string,
+ *      startDate: string,
+ *      endDate: string,
+ *      description: string,
+ *      bulletPoints: string[],
+ *      technologies: TechnologyEntry[]
  * 
  */
 function Experience({ exp }: { exp: ExperienceEntry }) {
@@ -277,7 +324,7 @@ function Education({ education }: { education: EducationEntry }) {
 
 const NotYetSet = ({ children }: { children: React.ReactNode }) => {
     return (
-        <h1 className="text-xl font-bold bg-[length:500%] bg-gradient-to-r from-blue-600 via-red-700 to-indigo-600 bg-clip-text text-transparent text-shine" style={{WebkitBackgroundClip: 'text'} as React.CSSProperties}>
+        <h1 className="text-xl font-bold bg-[length:500%] bg-gradient-to-r from-blue-600 via-red-700 to-indigo-600 bg-clip-text text-transparent text-shine" style={{ WebkitBackgroundClip: 'text' } as React.CSSProperties}>
             {children}
         </h1>
     )

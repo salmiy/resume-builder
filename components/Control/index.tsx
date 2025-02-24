@@ -9,7 +9,7 @@ import Hobbies from './Hobbies';
 import Education from './Education';
 import { Montserrat, IBM_Plex_Mono } from 'next/font/google';
 import { useMachineEmitter, useMachineStore } from '@/context/machineContexts';
-import { DataScheme } from '@/machines/resumeMachine';
+import { DataScheme } from '@/machines/types';
 
 
 const montserrat = Montserrat({
@@ -70,7 +70,7 @@ export default function Panel() {
 
 
     return (
-        <div className="fixed bottom-8 left-8 flex gap-7 items-end print:hidden">
+        <div className="fixed bottom-4 left-4 sm:bottom-8 sm:left-8 flex flex-col-reverse sm:flex-row gap-7 items-start sm:items-end print:hidden">
             <Control />
             {/* export */}
             <Button onClick={exportJson} text='export your data'>

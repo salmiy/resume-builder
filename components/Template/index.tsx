@@ -1,6 +1,6 @@
 'use client';
 import { useMachineStore } from "@/context/machineContexts";
-import { DataScheme } from "@/machines/resumeMachine";
+import { DataScheme } from "@/machines/types";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { javascript } from '@codemirror/lang-javascript';
 import { less } from '@codemirror/lang-less';
@@ -15,9 +15,9 @@ import { defaultCssCode, defaultJsCode } from "./defaults";
 import { Alice, Roboto } from "next/font/google";
 
 const alice = Alice({
-  weight: '400',
-  variable: '--font-alice',
-  subsets: ['latin', 'latin-ext']
+    weight: '400',
+    variable: '--font-alice',
+    subsets: ['latin', 'latin-ext']
 })
 const roboto = Roboto({
     weight: ['400', '500', '700'],
@@ -32,6 +32,16 @@ type TemplateEntry = { Template: TemplateType }
 
 const templates = [
     { Template: Template001 },
+    { Template: Template002 },
+    { Template: Template002 },
+    { Template: Template002 },
+    { Template: Template002 },
+    { Template: Template002 },
+    { Template: Template002 },
+    { Template: Template002 },
+    { Template: Template002 },
+    { Template: Template002 },
+    { Template: Template002 },
     { Template: Template002 },
 ]
 
@@ -75,7 +85,7 @@ function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
     }
 
     return (
-        <div className="flex gap-4 min-h-screen min-w-screen print:p-0 print:block">
+        <div className="flex gap-4 min-h-screen min-w-screen max-h-screen max-w-full overflow-auto print:p-0 print:block">
             {mstate == 'templateDeveloping' &&
                 <div className="relative self-stretch flex py-1 px-1">
                     <Editor js={code.js} css={code.css} onChange={onCodeChange}
@@ -85,8 +95,8 @@ function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
                 </div>
             }
             <div className="flex flex-grow">
-                <div className="mx-auto flex gap-4 items-start">
-                    <div key="page" id="resumeUI" className={`${alice.variable} ${roboto.variable} my-auto box-content border print:border-none`}>
+                <div className="justify-between flex-grow flex gap-4 items-start">
+                    <div key="page" id="resumeUI" className={`${alice.variable} ${roboto.variable} m-auto box-content border border-neutral-300 print:border-none`}>
                         <template.Template data={data} />
                     </div>
                     {mstate == 'templateDeveloping' ||
@@ -124,41 +134,47 @@ function TemplatesCarousel({ templates, onTemplateClick, customTemplate }: {
     const { onPrevButtonClick, onNextButtonClick } = useEmblaButtons(emblaApi)
 
     return (
-        <div className="relative self-stretch w-[calc(12rem/1.414)] print:hidden">
-            <div className="absolute top-0 left-0 h-full w-full overflow-hidden" ref={emblaRef}>
-                <div className="flex flex-col gap-4 justify-centerf h-full max-h-full">
-                    <div key="topEmptySpace" className="min-h-0 basis-[4rem] flex-grow-0 flex-shrink-0"></div>
-                    {customTemplate &&
-                        <div key={'customtemplate'} onClick={() => onTemplateClick(customTemplate)} className="group flex flex-col gap-0 cursor-pointer">
-                            <div 
-                                className="min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-yellow-600   transition-all duration-300 group-hover:bg-yellow-500"
-                            ><img src="https://plasma.coveo.com/assets/CodeEditor-Bu-pz_XT.png" className="w-full h-full object-contain" /></div>
-                            <div className="text-lgf capitalize text-center">Editor template</div>
-                        </div>
-                    }
-                    {
-                        templates.map((t, i) => (
-                            <div key={'template' + i} onClick={() => onTemplateClick(t)}
-                                className="min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-gray-200 flex justify-center items-center text-lg capitalize cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:text-xl"
-                            > {'template ' + i} </div>
-                        ))
-                    }
-                    <div key="bottomEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
-                </div>
+        <div className="relative self-stretch w-[calc(12rem/1.414+2rem)] bg-neutral-100 flex flex-col gap-2 print:hidden">
+            <div className="absolute top-0 left-0 w-full z-10 bg-gradient-to-b from-[70%] from-neutral-200 p-2 px-4">
                 <button
                     onClick={onNextButtonClick}
-                    className="absolute top-2 left-1/2 -translate-x-1/2 bg-[#fffa] border-2 border-solid border-[#aaa] fill-[#777] p-5 rounded-full flex justify-center items-center">
-                    <svg className="w-4 h-4" viewBox="0 0 532 532">
-                        <path
-                            d="M520.646 355.66c13.805 13.793 13.805 36.208 0 50.001-13.804 13.785-36.238 13.785-50.034 0L266 201.22 61.391 405.66c-13.805 13.785-36.239 13.785-50.044 0-13.796-13.793-13.796-36.208 0-50.002 22.947-22.928 206.507-206.395 229.454-229.332a35.065 35.065 0 0 1 25.126-10.326c9.2 0 18.26 3.393 25.2 10.326 45.901 45.865 206.564 206.404 229.52 229.332Z"
+                    className="h-12 bg-slate-600 border-2 border-solid w-full border-slate-500 stroke-white py-[12px] rounded-full grid justify-center items-center box-border transition-all duration-150 hover:border-[6px] hover:py-[6px]">
+                    <svg className="w-full h-full" fill="none" viewBox="0 0 20 20">
+                        <path strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
+                            d="M 1 14 L 10 6 L 19 14"
                         />
                     </svg>
                 </button>
+            </div>
+            <div className="flex-grow relative z-0">
+                <div className="absolute top-0 left-0 h-full w-full overflow-hidden px-4" ref={emblaRef}>
+                    <div className="flex flex-col gap-4 justify-centerf h-full max-h-full">
+                        <div key="topEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
+                        {customTemplate &&
+                            <div key={'customtemplate'} onClick={() => onTemplateClick(customTemplate)} className="group flex flex-col gap-0 cursor-pointer">
+                                <div
+                                    className="min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-yellow-600   transition-all duration-300 group-hover:bg-yellow-500"
+                                ><img src="https://plasma.coveo.com/assets/CodeEditor-Bu-pz_XT.png" className="w-full h-full object-contain" /></div>
+                                <div className="text-lgf capitalize text-center">Editor template</div>
+                            </div>
+                        }
+                        {
+                            templates.map((t, i) => (
+                                <div key={'template' + i} onClick={() => onTemplateClick(t)}
+                                    className="min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-gray-200 flex justify-center items-center text-lg capitalize cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:text-xl"
+                                > {'template ' + i} </div>
+                            ))
+                        }
+                        <div key="bottomEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
+                    </div>
+                </div>
+            </div>
+            <div className="absolute bottom-0 left-0 w-full z-10 bg-gradient-to-t from-[70%] from-neutral-200 p-2 px-4">
                 <button onClick={onPrevButtonClick}
-                    className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-[#fffa] border-2 border-solid border-[#aaa] fill-[#777] p-5 rounded-full flex justify-center items-center">
-                    <svg className="w-4 h-4" viewBox="0 0 532 532">
-                        <path
-                            d="M11.354 176.34c-13.805-13.793-13.805-36.208 0-50.001 13.804-13.785 36.238-13.785 50.034 0L266 330.78l204.61-204.442c13.805-13.785 36.239-13.785 50.044 0 13.796 13.793 13.796 36.208 0 50.002a5994246.277 5994246.277 0 0 0-229.454 229.332 35.065 35.065 0 0 1-25.126 10.326c-9.2 0-18.26-3.393-25.2-10.326C194.973 359.808 34.31 199.269 11.354 176.34Z"
+                    className="h-12 bg-slate-600 border-2 border-solid w-full border-slate-500 stroke-white py-[12px] rounded-full grid justify-center items-center box-border transition-all duration-150 hover:border-[6px] hover:py-[6px]">
+                    <svg className="w-full h-full" fill="none" viewBox="0 0 20 20">
+                        <path strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
+                            d="M 1 6 l 9 8 l 9 -8"
                         />
                     </svg>
                 </button>

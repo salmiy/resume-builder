@@ -1,13 +1,16 @@
+import { MachineEmitter, initialContext } from '@/machines/resumeMachine';
+import { DataScheme } from '@/machines/types';
 import { createContext, useContext } from 'react';
-import { Actor, AnyStateMachine, StateFrom } from 'xstate';
 
-export const MachineStoreContext = createContext<StateFrom<AnyStateMachine>['context'] | null>(null);
-export const MachineEmitterContext = createContext<Actor<AnyStateMachine>['send'] | null>(null);
+export const MachineStoreContext = createContext<DataScheme>( initialContext );
+export const MachineEmitterContext = createContext<MachineEmitter>((e) => {});
 
-export function useMachineStore(): StateFrom<AnyStateMachine>['context'] {
+export function useMachineStore(): DataScheme
+{
     return useContext(MachineStoreContext)
 }
 
-export function useMachineEmitter() {
+export function useMachineEmitter(): MachineEmitter
+{
     return useContext(MachineEmitterContext)
 }

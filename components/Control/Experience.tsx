@@ -4,7 +4,7 @@ import TextInput from "../Input";
 import { AutoResizeTextArea } from "../AutoResizeTextArea";
 import ImageInput from "../ImageInput";
 import { useMachineEmitter, useMachineStore } from "@/context/machineContexts";
-import { DataScheme, TechnologyEntry, ExperienceEntry } from "@/machines/resumeMachine";
+import { DataScheme, TechnologyEntry, ExperienceEntry } from "@/machines/types";
 import DeleteButton from "../DeleteButton";
 
 type FormState = {

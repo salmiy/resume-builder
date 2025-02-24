@@ -2,7 +2,7 @@
 import { FormEvent, useState } from 'react';
 import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
-import { DataScheme, HobbyEntry } from '@/machines/resumeMachine';
+import { DataScheme, HobbyEntry } from '@/machines/types';
 import TextInput from '../Input';
 
 

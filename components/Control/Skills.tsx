@@ -2,7 +2,7 @@
 import { FormEvent, useState } from 'react';
 import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
-import { DataScheme, SkillEntry } from '@/machines/resumeMachine';
+import { DataScheme, SkillEntry } from '@/machines/types';
 import TextInput from '../Input';
 import Select, { SingleValue } from 'react-select'
 import RangeInput from '../RangeInput';
@@ -40,7 +40,7 @@ function SkillsForm({ skill, onUpdate } :
     const [icon, setIcon] = useState(skill?.icon ?? iconBase64)
     const [name, setName] = useState(skill?.name ?? '')
     const [rating, setRating] = useState(skill?.rating ?? 10)
-    const [category, setCategory] = useState<SingleValue<CategoryOption>>(
+    const [category, setCategory] = useState<CategoryOption>(
         findOptionByLabel(skill?.category) ?? options[0]
     )
     const emit = useMachineEmitter()
@@ -48,17 +48,29 @@ function SkillsForm({ skill, onUpdate } :
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (!name) return
-        const value = { name, rating, category: category?.label }
+        const value = { 
+            name, rating,
+            category: category.label,
+            icon: category == options[1] ? icon : undefined
+        }
 
         setName('')
         setRating(10)
         setIcon(iconBase64)
 
-        const type = skill ? 'skill.update' : 'skill.add'
-        const payload = skill ? { id: skill.name } : {}
-
-        emit?.({ type, value, ...payload })
-        skill && onUpdate?.()
+        if (skill) {
+            emit({
+                type: 'skill.update',
+                id: skill.name,
+                value
+            })
+            onUpdate?.()
+        } else {
+            emit({
+                type: 'skill.add',
+                value
+            })
+        }
     }
 
 
@@ -85,7 +97,7 @@ function SkillsForm({ skill, onUpdate } :
                     options={options}
                     className='cursor-pointer'
                     isSearchable={true}
-                    onChange={v => setCategory(v)}
+                    onChange={v => setCategory(v ?? options[0])}
                     value={category}
                     classNames={{
                         container: () => 'select-container',

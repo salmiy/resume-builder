@@ -2,7 +2,7 @@
 import { FormEvent, useState } from 'react';
 import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
-import { DataScheme, LanguageEntry } from '@/machines/resumeMachine';
+import { DataScheme, LanguageEntry } from '@/machines/types';
 import TextInput from '../Input';
 import RangeInput from '../RangeInput';
 

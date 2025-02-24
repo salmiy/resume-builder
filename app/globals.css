@@ -56,7 +56,6 @@ button {
 }
 
 .peer:checked~.block {
-  /* background-color: #263f3f; */
   background: linear-gradient(270deg, #62a5fb, #a45bf7);
 }
 
@@ -155,7 +154,7 @@ button {
 
 @media print {
   @page {
-    size: A4;
+    size: 210mm 297mm;
     margin: 0;
   }
 

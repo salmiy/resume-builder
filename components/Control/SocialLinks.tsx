@@ -1,7 +1,7 @@
 import { FormEvent, useState } from 'react';
 import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
-import { DataScheme, SocialLinkEntry } from '@/machines/resumeMachine';
+import { DataScheme, SocialLinkEntry } from '@/machines/types';
 import TextInput from '../Input';
 import ImageInput from '../ImageInput';
 
