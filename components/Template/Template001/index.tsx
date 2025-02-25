@@ -33,37 +33,11 @@ function Me({ basics }: { basics: DataScheme['basics'] }) {
 }
 
 function Side({ data }: { data: DataScheme }) {
-    const languages = data.languages.data.filter(l => l.enabled)
-
     return (
         <div className="column flex flex-col pl-3 px-1 gap-4 w-[60mm] font-[family-name:var(--font-alice)] flex-shrink-0">
             <Links links={data.links} />
             <Skills skills={data.skills} />
-            {
-                data.languages.enabled ?
-                    languages.length ?
-                        <section key="languages">
-                            <header>
-                                <h2 className="text-[1.75rem] leading-tight font-bold">Languages</h2>
-                            </header>
-                            <div className="flex flex-col mt-1 ml-4">
-                                {
-                                    languages.map((lang) => (
-                                        <div key={lang.name} className="flex flex-col gap-1 text-[#333] text-lg font-medium">
-                                            <div>{lang.name}</div>
-                                            <div className="h-[4px] bg-gray-300 rounded-full overflow-hidden">
-                                                <div className="w-[var(--w)] h-full bg-yellow-600 rounded-full"
-                                                    style={{ '--w': `${lang.rating * 10}%` } as React.CSSProperties}
-                                                ></div>
-                                            </div>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </section> : <NotYetSet>Languages Not Yet Set</NotYetSet>
-                    : ''
-            }
-
+            <Languages languages={data.languages} />
         </div>
     )
 }
@@ -77,7 +51,7 @@ function Main({ data }: { data: DataScheme }) {
                 data.basics.summary.enabled ?
                     data.basics.summary.data ?
                         <section>
-                            <Segment landmark={<Dot className="w-4 h-4 bg-blue-800" />} lineClassName="bg-blue-700">
+                            <Segment landmark={<Dot className="w-4 h-4 bg-blue-800" />} lineClassName="bg-blue-700" fullLine={false}>
                                 <h2 className="text-3xl leading-tight font-bold">Summary</h2>
                             </Segment>
                             <Segment lineClassName="bg-gradient-to-b from-blue-700 to-green-700">
@@ -161,7 +135,7 @@ function Skills({ skills }: { skills: DataScheme['skills'] }) {
                 skills.enabled && softwareSkills.length ?
                     <section key="software-skills">
                         <header>
-                            <h2 className="text-[1.75rem] leading-tight font-bold">Software & IT</h2>
+                            <h2 className="text-[1.75rem] leading-tight font-bold">Software / IT</h2>
                         </header>
                         <div className="flex gap-2 flex-wrap font-[family-name:var(--font-roboto)] mt-1">
                             {
@@ -225,7 +199,7 @@ function Languages({ languages }: { languages: DataScheme['languages'] }) {
                         }
                     </div>
                 </section> : <NotYetSet>Languages Not Yet Set</NotYetSet>
-            : ''
+            : null
     )
 }
 
@@ -321,7 +295,6 @@ function Education({ education }: { education: EducationEntry }) {
 
 
 // 
-
 const NotYetSet = ({ children }: { children: React.ReactNode }) => {
     return (
         <h1 className="text-xl font-bold bg-[length:500%] bg-gradient-to-r from-blue-600 via-red-700 to-indigo-600 bg-clip-text text-transparent text-shine" style={{ WebkitBackgroundClip: 'text' } as React.CSSProperties}>
@@ -336,16 +309,17 @@ const Dot = ({ className = "w-4 h-4" }: { className?: string }) => (
     </div>
 )
 
-function Segment({ children, landmark, lineClassName = "bg-black" }: {
+function Segment({ children, landmark, lineClassName = "bg-black", fullLine = true }: {
     children: React.ReactNode,
     landmark?: React.ReactNode,
-    lineClassName?: string
+    lineClassName?: string,
+    fullLine?: boolean
 }) {
     return (
         <div className="flex gap-2">
             <div className="relative w-6 flex-shrink-0 grid grid-cols-1 grid-rows-1">
                 <div className="col-start-1 row-start-1 flex justify-center">
-                    <div className={`w-[2px] h-full ${lineClassName}`}></div>
+                    <div className={`w-[2px] ${ fullLine? 'h-full':'h-1/2 mt-auto' } ${lineClassName}`}></div>
                 </div>
                 {landmark}
             </div>

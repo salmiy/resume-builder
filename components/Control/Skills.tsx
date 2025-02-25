@@ -4,31 +4,18 @@ import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
 import { DataScheme, SkillEntry } from '@/machines/types';
 import TextInput from '../Input';
-import Select, { SingleValue } from 'react-select'
+import Select from 'react-select'
 import RangeInput from '../RangeInput';
 import ImageInput from '../ImageInput';
+import { iconBase64, skillsOptions, softwareOption } from './common/staticData';
 
 
 interface CategoryOption { value: string, label: string }
 
-const options = [
-    { value: "technical", label: "Technical Skill" },
-    { value: "software-it", label: "Software & IT Skill" },
-    { value: "analytical-research", label: "Analytical & Research Skill" },
-    { value: "project-management", label: "Project Management Skill" },
-    { value: "marketing-sales", label: "Marketing & Sales Skill" },
-    { value: "design-creative", label: "Design & Creative Skill" },
-    { value: "soft-skill", label: "Soft Skill" },
-    { value: "finance-eccounting", label: "Finance & Accounting Skill" },
-    { value: "writing-communication", label: "Writing & Communication Skill" },
-    { value: "industry-specific", label: "Industry-Specific Skill" }
-]
-const iconBase64 = `data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzAgMzAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cGF0aAogICAgICAgIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2U9ImJsYWNrIgogICAgICAgIGQ9Ik0gNSAxNSBBIDEgMSAwIDAgMCAyNSAxNSBBIDEgMSAwIDAgMCA1IDE1IE0gNyAyMSBMIDExLjYyNSAxNS45ODcgUSAxMi42NjQgMTQuODEgMTMuNzAyIDE1Ljg4MyBMIDE3IDE5IE0gMTUgMTcgQyAxNy45MjcgMTUuNDMzIDIxLjMyIDE2Ljg1MyAyMS40MjQgMjAuNTIzIE0gMTUgOSBBIDEgMSAwIDAgMCAxNSAxMyBBIDEgMSAwIDAgMCAxNSA5Ij4KICAgIDwvcGF0aD4KPC9zdmc+`
 
 function findOptionByLabel(label: string | undefined): CategoryOption | undefined {
     if (!label) return undefined
-    const catlookup = options.find(o => o.label == label)
-    console.log('searching...', catlookup)
+    const catlookup = skillsOptions.find(o => o.label == label)
     return catlookup
 }
 
@@ -41,7 +28,7 @@ function SkillsForm({ skill, onUpdate } :
     const [name, setName] = useState(skill?.name ?? '')
     const [rating, setRating] = useState(skill?.rating ?? 10)
     const [category, setCategory] = useState<CategoryOption>(
-        findOptionByLabel(skill?.category) ?? options[0]
+        findOptionByLabel(skill?.category) ?? skillsOptions[0]
     )
     const emit = useMachineEmitter()
 
@@ -51,7 +38,7 @@ function SkillsForm({ skill, onUpdate } :
         const value = { 
             name, rating,
             category: category.label,
-            icon: category == options[1] ? icon : undefined
+            icon: category == softwareOption ? icon : undefined
         }
 
         setName('')
@@ -79,7 +66,7 @@ function SkillsForm({ skill, onUpdate } :
             <div className="flex flex-col gap-2">
                 <div className="flex gap-2 relative z-50">
                     {
-                        category == options[1] &&
+                        category == softwareOption &&
                         <ImageInput
                             onChange={(url: string) => setIcon(url)}
                             key={icon || 'link-icon'}
@@ -94,10 +81,10 @@ function SkillsForm({ skill, onUpdate } :
                         placeholder="Skill" />
                 </div>
                 <Select
-                    options={options}
+                    options={skillsOptions}
                     className='cursor-pointer'
                     isSearchable={true}
-                    onChange={v => setCategory(v ?? options[0])}
+                    onChange={v => setCategory(v ?? skillsOptions[0])}
                     value={category}
                     classNames={{
                         container: () => 'select-container',

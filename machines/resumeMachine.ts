@@ -1,5 +1,14 @@
 import { createMachine, assign, Actor } from "xstate";
-import { DataScheme, EducationEntry, ExperienceEntry, HobbyEntry, LanguageEntry, ProjectEntry, SkillEntry, SocialLinkEntry } from "./types";
+import {
+    DataScheme,
+    EducationEntry,
+    ExperienceEntry,
+    HobbyEntry,
+    LanguageEntry,
+    ProjectEntry,
+    SkillEntry,
+    SocialLinkEntry
+} from "./types";
 
 type EventType = { type: 'createTemplate' }
     | { type: 'developingFinished' }
@@ -21,11 +30,11 @@ type EventType = { type: 'createTemplate' }
     | { type: 'project.update', index: number, value: Partial<ProjectEntry> }
     | { type: 'links.enabled', value: boolean }
     | { type: 'link.add', value: SocialLinkEntry }
-    | { type: 'link.update', id: string, value: SocialLinkEntry }
+    | { type: 'link.update', id: string, value: Partial<SocialLinkEntry> }
     | { type: 'link.delete', id: string }
     | { type: 'hobbies.enabled', value: boolean }
     | { type: 'hobby.add', value: HobbyEntry }
-    | { type: 'hobby.update', id: string, value: HobbyEntry }
+    | { type: 'hobby.update', id: string, value: Partial<HobbyEntry> }
     | { type: 'hobby.delete', id: string }
     | { type: 'skills.enabled', value: boolean }
     | { type: 'skill.add', value: SkillEntry }
@@ -33,7 +42,7 @@ type EventType = { type: 'createTemplate' }
     | { type: 'skill.delete', id: string }
     | { type: 'languages.enabled', value: boolean }
     | { type: 'language.add', value: LanguageEntry }
-    | { type: 'language.update', id: string, value: LanguageEntry }
+    | { type: 'language.update', id: string, value: Partial<LanguageEntry> }
     | { type: 'language.delete', id: string }
 
 
@@ -80,9 +89,8 @@ export const initialContext: DataScheme = {
     },
 };
 
-
 const resumeMachine = createMachine({
-    id: "contact info",
+    id: "resume_data",
     initial: 'composingResume',
     types: {
         context: {} as DataScheme,
@@ -381,16 +389,15 @@ const resumeMachine = createMachine({
         },
         'hobby.update': {
             actions: assign({
-                hobbies: ({ context, event }) => ({
-                    ...context.hobbies,
-                    data: [
-                        ...context.hobbies.data.filter(l => l.name != event.id),
-                        {
-                            ...context.hobbies.data.find(l => l.name == event.id),
-                            ...event.value
-                        }
-                    ]
-                })
+                hobbies: ({ context, event }) => {
+                    const data = context.hobbies.data;
+                    const hobbyIdx = data.findIndex(l => l.name == event.id)
+                    data[hobbyIdx] = { ...data[hobbyIdx], ...event.value }
+                    return {
+                        ...context.hobbies,
+                        data
+                    }
+                }
             }),
         },
         'hobby.delete': {

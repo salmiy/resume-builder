@@ -47,7 +47,8 @@ function formReducer(state: FormState, action: FormReducerEvent) {
 function EducationForm(props: {
     showList?: () => void
 } & ({ educationIndex?: number, education?: EducationEntry }
-    | { educationIndex: number, education: EducationEntry })) {
+    | { educationIndex: number, education: EducationEntry }))
+{
     const { bulletPoints, ...expBasics } = props.education ?? {
         bulletPoints: [], technologies: [],
         degree: "", university: "",

@@ -4,6 +4,7 @@ import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
 import { DataScheme, SocialLinkEntry } from '@/machines/types';
 import TextInput from '../Input';
 import ImageInput from '../ImageInput';
+import { iconBase64 } from './common/staticData';
 
 
 function SocialLinkEntryForm({ link, onUpdate }: {
@@ -11,7 +12,7 @@ function SocialLinkEntryForm({ link, onUpdate }: {
     | { link: SocialLinkEntry, onUpdate: () => void 
 })
 {   
-    const [icon, setIcon] = useState(link?.icon ?? "https://i.pinimg.com/736x/93/fd/a4/93fda4257dbfd4412650d51641172782.jpg")
+    const [icon, setIcon] = useState(link?.icon ?? iconBase64)
     const [name, setName] = useState(link?.name ?? '')
     const [userId, setUserId] = useState(link?.userId ?? '')
     const [url, setUrl] = useState(link?.url ?? '')
@@ -24,16 +25,25 @@ function SocialLinkEntryForm({ link, onUpdate }: {
         if (!name || !userId || !url) return
         const value = { icon, name, userId, url }
 
-        setIcon("https://i.pinimg.com/736x/93/fd/a4/93fda4257dbfd4412650d51641172782.jpg")
+        setIcon(iconBase64)
         setName('')
         setUserId('')
         setUrl('')
 
-        const type = link ? 'link.update' : 'link.add'
-        const payload = link ? { id: link.name } : {}
-
-        emit?.({ type, value, ...payload })
-        link && onUpdate?.()
+        if (link) {
+            emit({
+                type: 'link.update',
+                id: link.name,
+                value
+            })
+            onUpdate?.()
+        }
+        else {
+            emit({
+                type: 'link.add',
+                value
+            })
+        }
     }
     
 
@@ -84,7 +94,7 @@ function SocialLinkEntryCard({ link, onEdit, onDelete }: {
                 </div>
                 <Switcher
                     initial={link.enabled}
-                    onChange={enabled => emit?.({type:'link.update', id: link.name, value: {enabled}})}
+                    onChange={enabled => emit({type:'link.update', id: link.name, value: {enabled}})}
                     size="sm"
                 />
             </header>

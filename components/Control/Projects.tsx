@@ -1,9 +1,9 @@
 import { useReducer, useState, useRef } from "react";
-import Switcher from "../Switcher";
-import TextInput from "../Input";
 import { AutoResizeTextArea } from "../AutoResizeTextArea";
 import { useMachineEmitter, useMachineStore } from "@/context/machineContexts";
 import { DataScheme, TechnologyEntry, ExperienceEntry } from "@/machines/types";
+import Switcher from "../Switcher";
+import TextInput from "../Input";
 import BulletPoints from "./common/BulletPoints";
 import Technologies from "./common/Technologies";
 
