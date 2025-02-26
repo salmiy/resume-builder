@@ -11,7 +11,7 @@ type FormState = Omit<ProjectEntry, 'bulletPoints'|'technologies'>
 
 type FormReducerEvent = {
     type: 'field.change',
-    field: "position" | "company" | "location" | "startDate" | "endDate" | "description",
+    field: "name" | "startDate" | "endDate" | "description",
     value: string
 } | { type: 'reset' }
 
@@ -44,12 +44,12 @@ type FormProps = { showList?: () => void } & (
     { projectIndex?: number, project?: ProjectEntry }
     | { projectIndex: number, project: ProjectEntry } )
 
+
 function ProjectForm(props: FormProps)
 {
     const { bulletPoints, technologies, ...expBasics } = props.project ?? {
         bulletPoints: [], technologies: [],
-        name: "",
-        location: "", startDate: "",
+        name: "", startDate: "",
         endDate: "", description: ""
     }
     const emit = useMachineEmitter()
@@ -133,7 +133,7 @@ function ProjectForm(props: FormProps)
                     value={state.name}
                     onChange={e => dispatch({
                         type: 'field.change',
-                        field: 'position',
+                        field: 'name',
                         value: e.target.value
                     })}
                 />

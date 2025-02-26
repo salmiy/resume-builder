@@ -1,4 +1,4 @@
-import { DataScheme, EducationEntry, ExperienceEntry } from "@/machines/types";
+import { DataScheme, EducationEntry, ExperienceEntry, ProjectEntry } from "@/machines/types";
 import React from "react";
 
 
@@ -44,6 +44,7 @@ function Side({ data }: { data: DataScheme }) {
 
 function Main({ data }: { data: DataScheme }) {
     const experience = data.experience.data.filter(e => e.enabled)
+    const projects = data.projects.data.filter(p => p.enabled)
     const educations = data.education.data.filter(e => e.enabled)
     return (
         <div className="column flex flex-col font-[family-name:var(--font-alice)] pe-1">
@@ -62,6 +63,25 @@ function Main({ data }: { data: DataScheme }) {
                         <Segment landmark={<Dot className="w-4 h-4 bg-yellow-600" />}>
                             <NotYetSet>Summary Not Yet Set</NotYetSet>
                         </Segment> : ''
+            }
+            {
+                data.experience.enabled ?
+                    experience.length ?
+                        <section>
+                            <Segment landmark={<Dot className="w-4 h-4 bg-green-800" />} lineClassName="bg-green-700">
+                                <h2 className="text-3xl leading-tight font-bold">Projects</h2>
+                            </Segment>
+                            <div className="flex flex-col">
+                                {
+                                    projects.map((p, i) => (
+                                        <Project key={p.startDate} project={p} />
+                                    ))
+                                }
+                            </div>
+                        </section> :
+                        <Segment landmark={<Dot className="w-4 h-4 bg-yellow-600" />}>
+                            <NotYetSet>Experience Not Yet Set</NotYetSet>
+                        </Segment> : ""
             }
             {
                 data.experience.enabled ?
@@ -248,6 +268,68 @@ function Experience({ exp }: { exp: ExperienceEntry }) {
                         <ul className="mt-1 ml-4 list-disc">
                             {
                                 exp.bulletPoints.map((bp, i) => (
+                                    <li key={'bp' + i} className="text-[#333] text-base font-medium">
+                                        {bp}
+                                    </li>
+                                ))
+                            }
+                        </ul>
+                    }
+                </div>
+            </Segment>
+        </div>
+    )
+}
+
+/**
+ * Experience contains:
+ *      enabled?: boolean
+ *      name: string,
+ *      startDate: string,
+ *      endDate: string,
+ *      description: string,
+ *      bulletPoints: string[],
+ *      technologies: TechnologyEntry[]
+ * 
+ */
+function Project({ project }: { project: ProjectEntry }) {
+    return (
+        <div className="flex flex-col">
+            <EmptySegment className="h-3" lineClassName="bg-green-700" />
+            <Segment landmark={<Dot className="h-3 w-3 bg-white border-2 border-green-700" />} lineClassName="bg-green-700">
+                <h2 className="text-xl leading-tight font-semibold">
+                    { project.name }
+                </h2>
+            </Segment>
+            <Segment lineClassName="bg-green-700">
+                <div className="flex flex-col">
+                    <h3 className="text-lg leading-tight">
+                        <span className="font-semibold">{project.startDate}</span> to <span className="font-semibold">{project.endDate}</span>
+                    </h3>
+                    {
+                        project.technologies.length &&
+                        <div className="flex items-center gap-2 pt-2">
+                            {
+                                project.technologies.map((t, i) => (
+                                    <div key={t.name} className="flex gap-2 rounded-full border border-solid border-[#ccc] justify-center items-center px-2 py-1">
+                                        <img className="w-4 h-4 object-contain rounded-sm" src={t.icon} />
+                                        {t.name}
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    }
+                    {
+                        project.description &&
+                        <p>
+                            { project.description }
+                        </p>
+                    }
+                    {
+                        project.bulletPoints.length &&
+                        <ul className="mt-1 ml-4 list-disc">
+                            {
+                                project.bulletPoints.map((bp, i) => (
                                     <li key={'bp' + i} className="text-[#333] text-base font-medium">
                                         {bp}
                                     </li>
