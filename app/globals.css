@@ -62,7 +62,6 @@ button {
 .ltr {
   direction: ltr;
 }
-
 .rtl {
   direction: rtl;
 }
@@ -91,29 +90,13 @@ button {
   min-width: 210mm;
   width: 210mm;
   min-height: 297mm;
+  height: 297mm;
   display: flex;
   flex-direction: column;
 }
 
-.me {
-  height: 40mm;
-  background-color: beige;
-  display: flex;
-}
 
-.content {
-  flex: 1;
-}
 
-.side {
-  width: 65mm;
-  background-color: azure;
-}
-
-#resumeUI>.content .main {
-  flex: 1;
-  background-color: rgb(250, 172, 78);
-}
 
 @keyframes wiggle {
   0% {
@@ -145,7 +128,6 @@ button {
       background-position: 100% 50%;
   }
 }
-
 .text-shine {
   animation: textShine 3s ease-in-out infinite alternate;
 }
@@ -156,10 +138,6 @@ button {
   @page {
     size: 210mm 297mm;
     margin: 0;
-  }
-
-  #control {
-    display: none;
   }
 }
 

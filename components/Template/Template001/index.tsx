@@ -65,8 +65,8 @@ function Main({ data }: { data: DataScheme }) {
                         </Segment> : ''
             }
             {
-                data.experience.enabled ?
-                    experience.length ?
+                data.projects.enabled ?
+                    projects.length ?
                         <section>
                             <Segment landmark={<Dot className="w-4 h-4 bg-green-800" />} lineClassName="bg-green-700">
                                 <h2 className="text-3xl leading-tight font-bold">Projects</h2>
@@ -80,7 +80,7 @@ function Main({ data }: { data: DataScheme }) {
                             </div>
                         </section> :
                         <Segment landmark={<Dot className="w-4 h-4 bg-yellow-600" />}>
-                            <NotYetSet>Experience Not Yet Set</NotYetSet>
+                            <NotYetSet>Projects Not Yet Set</NotYetSet>
                         </Segment> : ""
             }
             {
@@ -149,10 +149,10 @@ function Links({ links }: { links: DataScheme['links'] }) {
 function Skills({ skills }: { skills: DataScheme['skills'] }) {
     const softwareSkills = skills.data.filter(s => s.enabled && s.category == "Software & IT Skill")
     const otherSkills = skills.data.filter(s => s.enabled && s.category != "Software & IT Skill")
-    return (
+    return skills.enabled ? (
         <>
             {
-                skills.enabled && softwareSkills.length ?
+                softwareSkills.length ?
                     <section key="software-skills">
                         <header>
                             <h2 className="text-[1.75rem] leading-tight font-bold">Software / IT</h2>
@@ -172,27 +172,26 @@ function Skills({ skills }: { skills: DataScheme['skills'] }) {
                     </section> : ''
             }
             {
-                skills.enabled ?
-                    otherSkills.length ?
-                        <section key="other-skills">
-                            <header>
-                                <h2 className="text-[1.75rem] leading-tight font-bold">Skills</h2>
-                            </header>
-                            <div className="flex flex-wrap mt-1 ml-4">
-                                {
-                                    otherSkills.map(skill => (
-                                        <div key={skill.name + skill.rating} className="flex gap-2 text-[#333] text-lg font-medium">
-                                            <Dot className="h-2 w-2" />
-                                            {skill.name}
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </section> : <NotYetSet>Skills Not Yet Set</NotYetSet>
-                    : ''
+                otherSkills.length ?
+                    <section key="other-skills">
+                        <header>
+                            <h2 className="text-[1.75rem] leading-tight font-bold">Skills</h2>
+                        </header>
+                        <div className="flex flex-wrap mt-1 ml-4">
+                            {
+                                otherSkills.map(skill => (
+                                    <div key={skill.name + skill.rating} className="flex gap-2 text-[#333] text-lg font-medium">
+                                        <Dot className="h-2 w-2" />
+                                        {skill.name}
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </section> : <NotYetSet>Skills Not Yet Set</NotYetSet>
+
             }
         </>
-    )
+    ) : null
 }
 
 function Languages({ languages }: { languages: DataScheme['languages'] }) {
@@ -298,7 +297,7 @@ function Project({ project }: { project: ProjectEntry }) {
             <EmptySegment className="h-3" lineClassName="bg-green-700" />
             <Segment landmark={<Dot className="h-3 w-3 bg-white border-2 border-green-700" />} lineClassName="bg-green-700">
                 <h2 className="text-xl leading-tight font-semibold">
-                    { project.name }
+                    {project.name}
                 </h2>
             </Segment>
             <Segment lineClassName="bg-green-700">
@@ -322,7 +321,7 @@ function Project({ project }: { project: ProjectEntry }) {
                     {
                         project.description &&
                         <p>
-                            { project.description }
+                            {project.description}
                         </p>
                     }
                     {
@@ -401,7 +400,7 @@ function Segment({ children, landmark, lineClassName = "bg-black", fullLine = tr
         <div className="flex gap-2">
             <div className="relative w-6 flex-shrink-0 grid grid-cols-1 grid-rows-1">
                 <div className="col-start-1 row-start-1 flex justify-center">
-                    <div className={`w-[2px] ${ fullLine? 'h-full':'h-1/2 mt-auto' } ${lineClassName}`}></div>
+                    <div className={`w-[2px] ${fullLine ? 'h-full' : 'h-1/2 mt-auto'} ${lineClassName}`}></div>
                 </div>
                 {landmark}
             </div>

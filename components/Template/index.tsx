@@ -3,7 +3,7 @@ import { useMachineStore } from "@/context/machineContexts";
 import { DataScheme } from "@/machines/types";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { javascript } from '@codemirror/lang-javascript';
-import { less } from '@codemirror/lang-less';
+import { css } from '@codemirror/lang-css';
 import React, { useEffect, useRef, useState } from "react";
 import { StateValue } from "xstate";
 import useEmblaCarousel from "embla-carousel-react";
@@ -13,6 +13,7 @@ import Template002 from "./002";
 import { findStyleSheetByTitle, changeStyleSheetSelectors } from "./utils"
 import { defaultCssCode, defaultJsCode } from "./defaults";
 import { Alice, Roboto } from "next/font/google";
+import { twMerge } from "tailwind-merge";
 
 const alice = Alice({
     weight: '400',
@@ -57,7 +58,6 @@ function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
     async function applyTemplate() {
         setCompiling(true);
         const Babel = await import('@babel/standalone')
-        await new Promise((resolve, reject) => { setTimeout(resolve, 1000) })
         try {
             const babelOut = Babel.transform(
                 `${code.js}`,
@@ -88,18 +88,19 @@ function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
         <div className="flex gap-4 min-h-screen min-w-screen max-h-screen max-w-full overflow-auto print:p-0 print:block">
             {mstate == 'templateDeveloping' &&
                 <div className="relative self-stretch flex py-1 px-1">
-                    <Editor js={code.js} css={code.css} onChange={onCodeChange}
-                        onApply={applyTemplate} onDone={() => emit?.({ type: 'developingFinished' })}
+                    <Editor jsCode={code.js} cssCode={code.css} onChange={onCodeChange}
+                        onApply={applyTemplate} onDone={() => emit({ type: 'developingFinished' })}
                     />
                     {compiling && <Compiling />}
                 </div>
             }
             <div className="flex flex-grow">
-                <div className="justify-between flex-grow flex gap-4 items-start">
-                    <div key="page" id="resumeUI" className={`${alice.variable} ${roboto.variable} m-auto box-content border border-neutral-300 print:border-none`}>
+                <div className="relative justify-between basis-full flex-grow-0 overflow-hidden flex gap-4 items-start print:block">
+                    <div key="page" id="resumeUI" className={`${alice.variable} ${roboto.variable} m-auto box-content border border-neutral-300 print:border-none print:m-0`}>
                         <template.Template data={data} />
                     </div>
-                    {mstate == 'templateDeveloping' ||
+                    {
+                        mstate == 'templateDeveloping' ||
                         <TemplatesCarousel
                             templates={templates}
                             customTemplate={editorTemplate}
@@ -112,79 +113,93 @@ function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
     )
 }
 
-const Compiling = () => (
-    <div className="absolute top-0 left-0 w-full h-full bg-[#0000] backdrop-blur-sm flex justify-center items-center">
-        <svg className="w-24 h-24" viewBox="0 0 200 200">
-            <path fill="none" strokeLinecap="round" stroke="#263f3f" strokeWidth="15" d="M70 95.5V112m0-84v16.5m0 0a25.5 25.5 0 1 0 0 51 25.5 25.5 0 0 0 0-51Zm36.4 4.5L92 57.3M33.6 91 48 82.7m0-25.5L33.6 49m58.5 33.8 14.3 8.2">
-                <animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="3" from="360 70 70" to="0 70 70" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform>
-            </path>
-            <path fill="none" strokeLinecap="round" stroke="#263f3f" strokeWidth="15" d="M130 155.5V172m0-84v16.5m0 0a25.5 25.5 0 1 0 0 51 25.5 25.5 0 0 0 0-51Zm36.4 4.5-14.3 8.3M93.6 151l14.3-8.3m0-25.4L93.6 109m58.5 33.8 14.3 8.2">
-                <animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="3" from="0 130 130" to="360 130 130" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform>
-            </path>
-        </svg>
-    </div>
-)
+function Compiling() {
+    return (
+        <div className="absolute top-0 left-0 w-full h-full bg-[#0000] backdrop-blur-sm flex justify-center items-center">
+            <svg className="w-24 h-24" viewBox="0 0 200 200">
+                <path fill="none" strokeLinecap="round" stroke="#263f3f" strokeWidth="15" d="M70 95.5V112m0-84v16.5m0 0a25.5 25.5 0 1 0 0 51 25.5 25.5 0 0 0 0-51Zm36.4 4.5L92 57.3M33.6 91 48 82.7m0-25.5L33.6 49m58.5 33.8 14.3 8.2">
+                    <animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="3" from="360 70 70" to="0 70 70" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform>
+                </path>
+                <path fill="none" strokeLinecap="round" stroke="#263f3f" strokeWidth="15" d="M130 155.5V172m0-84v16.5m0 0a25.5 25.5 0 1 0 0 51 25.5 25.5 0 0 0 0-51Zm36.4 4.5-14.3 8.3M93.6 151l14.3-8.3m0-25.4L93.6 109m58.5 33.8 14.3 8.2">
+                    <animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="3" from="0 130 130" to="360 130 130" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform>
+                </path>
+            </svg>
+        </div>
+    )
+}
 
 function TemplatesCarousel({ templates, onTemplateClick, customTemplate }: {
     templates: TemplateEntry[],
     onTemplateClick: (template: TemplateEntry) => void,
     customTemplate?: TemplateEntry
 }) {
+    const [isShown, setIsShown] = useState(false)
     const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, axis: 'y', dragFree: true })
     const { onPrevButtonClick, onNextButtonClick } = useEmblaButtons(emblaApi)
 
     return (
-        <div className="relative self-stretch w-[calc(12rem/1.414+2rem)] bg-neutral-100 flex flex-col gap-2 print:hidden">
-            <div className="absolute top-0 left-0 w-full z-10 bg-gradient-to-b from-[70%] from-neutral-200 p-2 px-4">
-                <button
-                    onClick={onNextButtonClick}
-                    className="h-12 bg-slate-600 border-2 border-solid w-full border-slate-500 stroke-white py-[12px] rounded-full grid justify-center items-center box-border transition-all duration-150 hover:border-[6px] hover:py-[6px]">
-                    <svg className="w-full h-full" fill="none" viewBox="0 0 20 20">
-                        <path strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
-                            d="M 1 14 L 10 6 L 19 14"
-                        />
-                    </svg>
-                </button>
-            </div>
-            <div className="flex-grow relative z-0">
-                <div className="absolute top-0 left-0 h-full w-full overflow-hidden px-4" ref={emblaRef}>
-                    <div className="flex flex-col gap-4 justify-centerf h-full max-h-full">
-                        <div key="topEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
-                        {customTemplate &&
-                            <div key={'customtemplate'} onClick={() => onTemplateClick(customTemplate)} className="group flex flex-col gap-0 cursor-pointer">
-                                <div
-                                    className="min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-yellow-600   transition-all duration-300 group-hover:bg-yellow-500"
-                                ><img src="https://plasma.coveo.com/assets/CodeEditor-Bu-pz_XT.png" className="w-full h-full object-contain" /></div>
-                                <div className="text-lgf capitalize text-center">Editor template</div>
-                            </div>
-                        }
-                        {
-                            templates.map((t, i) => (
-                                <div key={'template' + i} onClick={() => onTemplateClick(t)}
-                                    className="min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-gray-200 flex justify-center items-center text-lg capitalize cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:text-xl"
-                                > {'template ' + i} </div>
-                            ))
-                        }
-                        <div key="bottomEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
+        <div className={twMerge("flex self-stretch gap-2 absolute top-0 right-0 h-full transition-all duration-300 lg:static lg:translate-x-0", !isShown && "translate-x-44")}>
+            <button onClick={()=>setIsShown(!isShown)} className="group mt-auto mb-2 w-16 h-16 pt-2 pb-1 rounded-3xl rounded-br-md rounded-tl-[2.5rem] shadow bg-yellow-600 lg:hidden">
+                <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
+                    <circle className="[cx:15] group-hover:[cx:16] transition-all duration-300" cy="6" r="1.5" />
+                    <circle className="[cx:13] transition-all duration-300" cy="9" r="1.5" />
+                    <circle className="[cx:11] group-hover:[cx:10] transition-all duration-300" cy="12" r="1.5" />
+                    <circle className="[cx:13] transition-all duration-300" cy="15" r="1.5" />
+                    <circle className="[cx:15] group-hover:[cx:16] transition-all duration-300" cy="18" r="1.5" />
+                </svg>
+            </button>
+            <div className="relative self-stretch w-44 bg-neutral-100 flex flex-col gap-2 shadow lg:shadow-none print:hidden">
+                <div className="absolute top-0 left-0 w-full z-10 bg-gradient-to-b from-[70%] from-neutral-200 p-2 px-4">
+                    <button
+                        onClick={onNextButtonClick}
+                        className="h-12 bg-slate-600 border-2 border-solid w-full border-slate-500 stroke-white py-[12px] rounded-full grid justify-center items-center box-border transition-all duration-150 hover:border-[6px] hover:py-[6px]">
+                        <svg className="w-full h-full" fill="none" viewBox="0 0 20 20">
+                            <path strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
+                                d="M 1 14 L 10 6 L 19 14"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div className="flex-grow relative z-0">
+                    <div className="absolute top-0 left-0 h-full w-full overflow-hidden px-4" ref={emblaRef}>
+                        <div className="flex flex-col gap-4 h-full max-h-full">
+                            <div key="topEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
+                            {customTemplate &&
+                                <div key={'customtemplate'} onClick={() => onTemplateClick(customTemplate)} className="group flex flex-col gap-0 cursor-pointer">
+                                    <div
+                                        className="min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-yellow-600   transition-all duration-300 group-hover:bg-yellow-500"
+                                    ><img src="https://plasma.coveo.com/assets/CodeEditor-Bu-pz_XT.png" className="w-full h-full object-contain" /></div>
+                                    <div className="text-lgf capitalize text-center">Editor template</div>
+                                </div>
+                            }
+                            {
+                                templates.map((t, i) => (
+                                    <div key={'template' + i} onClick={() => onTemplateClick(t)}
+                                        className="min-h-0 basis-[calc(9rem*1.414)] flex-grow-0 flex-shrink-0 w-36 rounded-md bg-gray-200 flex justify-center items-center text-lg capitalize cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:text-xl"
+                                    > {'template ' + i} </div>
+                                ))
+                            }
+                            <div key="bottomEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="absolute bottom-0 left-0 w-full z-10 bg-gradient-to-t from-[70%] from-neutral-200 p-2 px-4">
-                <button onClick={onPrevButtonClick}
-                    className="h-12 bg-slate-600 border-2 border-solid w-full border-slate-500 stroke-white py-[12px] rounded-full grid justify-center items-center box-border transition-all duration-150 hover:border-[6px] hover:py-[6px]">
-                    <svg className="w-full h-full" fill="none" viewBox="0 0 20 20">
-                        <path strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
-                            d="M 1 6 l 9 8 l 9 -8"
-                        />
-                    </svg>
-                </button>
+                <div className="absolute bottom-0 left-0 w-full z-10 bg-gradient-to-t from-[70%] from-neutral-200 p-2 px-4">
+                    <button onClick={onPrevButtonClick}
+                        className="h-12 bg-slate-600 border-2 border-solid w-full border-slate-500 stroke-white py-[12px] rounded-full grid justify-center items-center box-border transition-all duration-150 hover:border-[6px] hover:py-[6px]">
+                        <svg className="w-full h-full" fill="none" viewBox="0 0 20 20">
+                            <path strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
+                                d="M 1 6 l 9 8 l 9 -8"
+                            />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     )
 }
 
-function Editor({ js, css, onChange, onApply, onDone }: {
-    js: string, css: string, onChange: (js: string, type: 'js' | 'css') => void
+function Editor({ jsCode, cssCode, onChange, onApply, onDone }: {
+    jsCode: string, cssCode: string, onChange: (js: string, type: 'js' | 'css') => void
     onApply: () => void, onDone: () => void
 }) {
     const [type, setType] = useState<'js' | 'css'>('js');
@@ -224,11 +239,11 @@ function Editor({ js, css, onChange, onApply, onDone }: {
             <div className="flex-grow relative rounded-3xl rounded-tl-none overflow-hidden">
                 <ReactCodeMirror
                     className="absolute top-0 left-0 w-full h-full text-xl custom-scrollbar"
-                    value={type == 'js' ? js : css}
+                    value={type == 'js' ? jsCode : cssCode}
                     height="100%"
                     theme={'dark'}
                     onChange={(v) => onChange(v, type)}
-                    extensions={type == 'js' ? [javascript({ jsx: true })] : [less()]}
+                    extensions={type == 'js' ? [javascript({ jsx: true })] : [css()]}
                 />
             </div>
 
