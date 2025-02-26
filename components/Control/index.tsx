@@ -10,6 +10,7 @@ import Education from './Education';
 import { Montserrat, IBM_Plex_Mono } from 'next/font/google';
 import { useMachineEmitter, useMachineStore } from '@/context/machineContexts';
 import { DataScheme } from '@/machines/types';
+import Projects from './Projects';
 
 
 const montserrat = Montserrat({
@@ -29,10 +30,11 @@ interface Category {
 
 const categories: Category[] = [
     { name: "Basics", component: <Basics /> },
-    { name: "Social Links", component: <SocialLinkEntrys /> },
     { name: "Experience", component: <Experience /> },
+    { name: "Projects", component: <Projects /> },
     { name: "Education", component: <Education /> },
     { name: "Skills", component: <Skills /> },
+    { name: "Social Links", component: <SocialLinkEntrys /> },
     { name: "Languages", component: <Languages /> },
     { name: "Hobbies", component: <Hobbies /> },
 ]

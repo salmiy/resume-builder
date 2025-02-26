@@ -1,20 +1,13 @@
 import { useReducer, useState, useRef } from "react";
 import { AutoResizeTextArea } from "../AutoResizeTextArea";
 import { useMachineEmitter, useMachineStore } from "@/context/machineContexts";
-import { DataScheme, TechnologyEntry, ExperienceEntry } from "@/machines/types";
+import { DataScheme, TechnologyEntry, ProjectEntry } from "@/machines/types";
 import Switcher from "../Switcher";
 import TextInput from "../Input";
 import BulletPoints from "./common/BulletPoints";
 import Technologies from "./common/Technologies";
 
-interface FormState {
-    position: string,
-    company: string,
-    location: string,
-    startDate: string,
-    endDate: string,
-    description: string
-}
+type FormState = Omit<ProjectEntry, 'bulletPoints'|'technologies'>
 
 type FormReducerEvent = {
     type: 'field.change',
@@ -22,7 +15,7 @@ type FormReducerEvent = {
     value: string
 } | { type: 'reset' }
 
-type ExperiencdExtra = {
+type ProjectExtra = {
     bulletPoints: string[],
     technologies: TechnologyEntry[]
 }
@@ -37,9 +30,7 @@ function formReducer(state: FormState, action: FormReducerEvent) {
             break;
         case "reset":
             state = {
-                position: "",
-                company: "",
-                location: "",
+                name: "",
                 startDate: "",
                 endDate: "",
                 description: ""
@@ -49,35 +40,37 @@ function formReducer(state: FormState, action: FormReducerEvent) {
     return state
 }
 
-function ExperienceForm(props: {
-    showList?: () => void
-} & ({ experienceIndex?: number, experience?: ExperienceEntry }
-    | { experienceIndex: number, experience: ExperienceEntry })) {
-    const { bulletPoints, technologies, ...expBasics } = props.experience ?? {
+type FormProps = { showList?: () => void } & (
+    { projectIndex?: number, project?: ProjectEntry }
+    | { projectIndex: number, project: ProjectEntry } )
+
+function ProjectForm(props: FormProps)
+{
+    const { bulletPoints, technologies, ...expBasics } = props.project ?? {
         bulletPoints: [], technologies: [],
-        position: "", company: "",
+        name: "",
         location: "", startDate: "",
         endDate: "", description: ""
     }
     const emit = useMachineEmitter()
-    const extra = useRef<ExperiencdExtra>({ bulletPoints, technologies })
+    const extra = useRef<ProjectExtra>({ bulletPoints, technologies })
     const keys = useRef<[string, string]>(['bullets', 'techs'])
-    const [editingExpIdx, setEditingExpIdx] = useState(props.experienceIndex)
-    const [editingMsgDismissed, setEditingMsgDismissed] = useState(props.experienceIndex == undefined)
+    const [editingProjectIdx, setEditingProjectIdx] = useState(props.projectIndex)
+    const [editingMsgDismissed, setEditingMsgDismissed] = useState(props.projectIndex == undefined)
     const [state, dispatch] = useReducer(formReducer, expBasics)
 
-    function onExperienceAdded() {
+    function onprojectAdded() {
         const value = { ...state, ...extra.current }
-        if (editingExpIdx != undefined)
+        if (editingProjectIdx != undefined)
             emit({
-                type: 'experience.update',
-                index: editingExpIdx,
+                type: 'project.update',
+                index: editingProjectIdx,
                 value
             })
 
         else
             emit?.({
-                type: 'experience.add',
+                type: 'project.add',
                 value
             })
         clearForm()
@@ -97,10 +90,10 @@ function ExperienceForm(props: {
         <div className="flex flex-col min-h-full pb-20">
             {editingMsgDismissed ||
                 <div className="flex flex-col items-center bg-[#ccc] sticky top-0 font-medium py-1">
-                    Editing existing experience
+                    Editing existing project
                     <div className="flex gap-2">
                         <button
-                            onClick={() => { setEditingMsgDismissed(true); setEditingExpIdx(undefined) }}
+                            onClick={() => { setEditingMsgDismissed(true); setEditingProjectIdx(undefined) }}
                             className="py-1 px-3 bg-white rounded-full transition-all duration-200 hover:translate-y-[-2px] hover:shadow-lg"
                         >Switch to <strong>`Create New`</strong></button>
                         <button
@@ -111,7 +104,7 @@ function ExperienceForm(props: {
                 </div>
             }
             <div className="flex justify-between items-center p-4">
-                <h3 className="section-title text-xl font-medium">Add Experience</h3>
+                <h3 className="section-title text-xl font-medium">Add project</h3>
                 <div className="flex gap-2 absolute bottom-4 right-4 z-10">
                     <button
                         onClick={clearForm}
@@ -124,42 +117,26 @@ function ExperienceForm(props: {
                         <div className="absolute left-[50%] bottom-[100%] translate-y-12 scale-0 opacity-0 translate-x-[-50%] bg-red-700 shadow-lg text-white w-max rounded-full text-base font-medium py-1 px-3 -z-10 group-hover:-translate-y-2 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200 pointer-events-none">Reset Form</div>
                     </button>
                     <button
-                        onClick={onExperienceAdded}
+                        onClick={onprojectAdded}
                         className="group relative bg-[#2e5435] stroke-[#eee] p-3 rounded-full text-white text-base shadow-md"
                     >
                         <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none">
                             <path d="M4 12.6111L8.92308 17.5L20 6.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <div className="absolute right-0 bottom-[100%] translate-y-12 scale-0 opacity-0 bg-green-700 shadow-lg text-white w-max rounded-full text-base font-medium py-1 px-3 -z-10 group-hover:-translate-y-2 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200 pointer-events-none">{editingExpIdx == undefined ? "Add" : "Update"} Experience</div>
+                        <div className="absolute right-0 bottom-[100%] translate-y-12 scale-0 opacity-0 bg-green-700 shadow-lg text-white w-max rounded-full text-base font-medium py-1 px-3 -z-10 group-hover:-translate-y-2 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200 pointer-events-none">{editingProjectIdx == undefined ? "Add" : "Update"} project</div>
                     </button>
                 </div>
             </div>
             <div className="flex flex-col">
                 <TextInput
-                    placeholder="Position"
-                    value={state.position}
+                    placeholder="Project Name"
+                    value={state.name}
                     onChange={e => dispatch({
                         type: 'field.change',
                         field: 'position',
                         value: e.target.value
                     })}
                 />
-                <TextInput
-                    placeholder="Company"
-                    value={state.company}
-                    onChange={e => dispatch({
-                        type: 'field.change',
-                        field: 'company',
-                        value: e.target.value
-                    })} />
-                <TextInput
-                    placeholder="Location"
-                    value={state.location}
-                    onChange={e => dispatch({
-                        type: 'field.change',
-                        field: 'location',
-                        value: e.target.value
-                    })} />
                 <div className="flex gap-2">
                     <TextInput
                         className="w-0 flex-grow"
@@ -203,8 +180,8 @@ function ExperienceForm(props: {
     )
 }
 
-function ExperienceCard({ experience, onEnabledChange, onEdit, onDelete }: {
-    experience: ExperienceEntry,
+function ProjectCard({ project, onEnabledChange, onEdit, onDelete }: {
+    project: ProjectEntry,
     onEnabledChange: (status: boolean) => void,
     onEdit: () => void,
     onDelete: () => void,
@@ -217,11 +194,10 @@ function ExperienceCard({ experience, onEnabledChange, onEdit, onDelete }: {
             <header className="flex flex-col gap-2">
                 <div className="flex justify-between">
                     <h2 className="">
-                        <div className="text-xl font-medium">{experience.company}</div>
-                        <div>{experience.position}</div>
+                        <div className="text-xl font-medium">{project.name}</div>
                     </h2>
                     <Switcher
-                        initial={experience.enabled}
+                        initial={project.enabled}
                         onChange={onEnabledChange}
                         size="sm"
                     />
@@ -262,25 +238,23 @@ function ExperienceCard({ experience, onEnabledChange, onEdit, onDelete }: {
             {expanded &&
                 <div className="flex flex-col gap-2">
                     <div className="flex gap-4 items-center">
-                        <div className="px-4 py-1 border border-solid border-[#aaa] rounded-full">{experience.startDate || 'not set'}</div>
+                        <div className="px-4 py-1 border border-solid border-[#aaa] rounded-full">{project.startDate || 'not set'}</div>
                         <div className="font-medium">To</div>
-                        <div className="px-4 py-1 border border-solid border-[#aaa] rounded-full">{experience.endDate || 'not set'}</div>
+                        <div className="px-4 py-1 border border-solid border-[#aaa] rounded-full">{project.endDate || 'not set'}</div>
                     </div>
-                    <div className="px-4 py-1 border border-solid border-[#aaa] rounded-full">{experience.location || 'not set'}</div>
-
-                    <p className="indent-8"> {experience.description || 'not set'} </p>
+                    <p className="indent-8"> {project.description || 'not set'} </p>
 
                     <ul className="list-disc pl-8">
                         {
-                            experience.bulletPoints.length ?
-                                experience.bulletPoints.map((p, i) => (
+                            project.bulletPoints.length ?
+                                project.bulletPoints.map((p, i) => (
                                     <li key={i}>{p}</li>
                                 )) : <li>not set</li>
                         }
                     </ul>
                     <div className="flex gap-3 flex-wrap">
                         {
-                            experience.technologies.length ? experience.technologies.map((t, i) => (
+                            project.technologies.length ? project.technologies.map((t, i) => (
                                 <div key={i} className="px-4 py-1 border border-solid border-[#aaa] rounded-full">{t.name}</div>
                             )) : <div className="px-4 py-1 border border-solid border-[#aaa] rounded-full">not set</div>
                         }
@@ -300,11 +274,11 @@ function ExperienceCard({ experience, onEnabledChange, onEdit, onDelete }: {
     )
 }
 
-function ExperienceList(props: {
+function ProjectList(props: {
     showAddForm: () => void,
-    onEditExperience: (idx: number) => void
+    onEditproject: (idx: number) => void
 }) {
-    const { experience }: DataScheme = useMachineStore()
+    const { projects }: DataScheme = useMachineStore()
     const emit = useMachineEmitter()
 
     return (
@@ -312,27 +286,27 @@ function ExperienceList(props: {
             <div className="flex justify-between items-center px-4">
                 <h3 className="py-2 mt-2 mb-3 text-xl font-medium">Enabled</h3>
                 <Switcher
-                    initial={experience.enabled}
-                    onChange={(value: boolean) => emit?.({ type: 'experience.enable', value })} />
+                    initial={projects.enabled}
+                    onChange={(value: boolean) => emit?.({ type: 'projects.enable', value })} />
             </div>
             {
-                experience.data.length == 0 ? (
+                projects.data.length == 0 ? (
                     <div className="flex flex-col items-center py-8">
-                        <p className="text-3xl">No Experiences Yet.</p>
+                        <p className="text-3xl">No projects Yet.</p>
                         <button
                             onClick={props.showAddForm}
                             className="text-xl text-[#263f3f] font-bold underline"
-                        >add experience</button>
+                        >add project</button>
                     </div>
                 ) : (
                     <div className="flex flex-col gap-3 px-3 pb-12">
                         {
-                            experience.data.map((e, i) => (
-                                <ExperienceCard
+                            projects.data.map((e, i) => (
+                                <ProjectCard
                                     key={i}
-                                    experience={e}
-                                    onEdit={() => props.onEditExperience(i)}
-                                    onDelete={() => emit?.({ type: 'experience.delete', value: i })}
+                                    project={e}
+                                    onEdit={() => props.onEditproject(i)}
+                                    onDelete={() => emit?.({ type: 'project.delete', value: i })}
                                     onEnabledChange={(enabled) => console.log(enabled)}
                                 />
                             ))
@@ -344,18 +318,18 @@ function ExperienceList(props: {
     )
 }
 
-export default function Experience() {
-    const { experience }: DataScheme = useMachineStore()
-    const [showForm, setShowForm] = useState(experience.data.length == 0)
-    const [experienceIdx, setExperienceIdx] = useState<number | null>(null)
+export default function Projects() {
+    const { projects }: DataScheme = useMachineStore()
+    const [showForm, setShowForm] = useState(projects.data.length == 0)
+    const [projectIdx, setprojectIdx] = useState<number | null>(null)
 
     function onShowList() {
         setShowForm(false)
-        setExperienceIdx(null)
+        setprojectIdx(null)
     }
-    function onEditExperience(idx: number) {
+    function onEditproject(idx: number) {
         console.log('setting index to: ', idx)
-        setExperienceIdx(idx)
+        setprojectIdx(idx)
         setShowForm(true)
     }
 
@@ -364,7 +338,7 @@ export default function Experience() {
             <header className="flex justify-center items-center gap-4 m-4 mr-2">
                 <button
                     className={`text-2xl py-2 px-4 flex-grow basis-0 rounded-full transition-all duration-200 ${showForm ? 'opacity-40 bg-[#bbb]' : 'opacity-100 bg-white'}`}
-                    onClick={() => { setShowForm(false), setExperienceIdx(null) }}
+                    onClick={() => { setShowForm(false), setprojectIdx(null) }}
                 >List</button>
                 <div className="self-stretch w-[1px] my-3 bg-[#0005] hidden"></div>
                 <button
@@ -374,18 +348,18 @@ export default function Experience() {
             </header>
             {
                 showForm ?
-                    <ExperienceForm
+                    <ProjectForm
                         {
-                        ...(experienceIdx != null ? {
-                            experienceIndex: experienceIdx,
-                            experience: experience.data[experienceIdx]
+                        ...(projectIdx != null ? {
+                            projectIndex: projectIdx,
+                            project: projects.data[projectIdx]
                         } : {})
                         }
                         showList={onShowList}
                     /> :
-                    <ExperienceList
+                    <ProjectList
                         showAddForm={() => setShowForm(true)}
-                        onEditExperience={onEditExperience}
+                        onEditproject={onEditproject}
                     />
             }
         </section>
