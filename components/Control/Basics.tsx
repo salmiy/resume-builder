@@ -1,5 +1,5 @@
 
-import { useRef, ChangeEvent } from 'react';
+import { ChangeEvent } from 'react';
 import ImageInput from '../ImageInput';
 import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
@@ -12,9 +12,6 @@ import { AutoResizeTextArea } from '../AutoResizeTextArea';
 export default function Basics() {
     const { basics }: DataScheme = useMachineStore()
     const emit = useMachineEmitter()
-    const taRef = useRef<HTMLTextAreaElement>(null)
-
-    useAutosizeTextArea(taRef.current, basics.summary.data)
 
     function onInputChange(field: string, e: ChangeEvent<HTMLInputElement>) {
         emit?.({

@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, JSX, ChangeEvent } from 'react';
 import Basics from './Basics';
-import SocialLinkEntrys from './SocialLinks';
+import SocialLinks from './SocialLinks';
 import Experience from './Experience';
 import Skills from './Skills';
 import Languages from './Languages';
@@ -34,7 +34,7 @@ const categories: Category[] = [
     { name: "Projects", component: <Projects /> },
     { name: "Education", component: <Education /> },
     { name: "Skills", component: <Skills /> },
-    { name: "Social Links", component: <SocialLinkEntrys /> },
+    { name: "Social Links", component: <SocialLinks /> },
     { name: "Languages", component: <Languages /> },
     { name: "Hobbies", component: <Hobbies /> },
 ]
