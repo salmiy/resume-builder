@@ -40,7 +40,7 @@ export default function Panel() {
 
 
     return (
-        <div className="fixed bottom-4 left-4 sm:bottom-8 sm:left-8 flex flex-col-reverse sm:flex-row gap-7 items-start sm:items-end print:hidden">
+        <div className="fixed bottom-4 left-4 lg:bottom-8 lg:left-8 flex flex-col-reverse lg:flex-row gap-7 items-start lg:items-end print:hidden">
             <ControlCenter />
             {/* export */}
             <Button onClick={exportJson} text='export your data'>
@@ -80,6 +80,18 @@ export default function Panel() {
             <Button onClick={() => emit?.({ type: 'createTemplate' })} bgClass='bg-blue-700' text="create template">
                 <svg viewBox="0 0 21 20" className='h-full w-full'>
                     <path d="M 14.7 10 C 14.7 10.552 14.2296 11 13.65 11 L 11.55 11 L 11.55 13 C 11.55 13.552 11.0796 14 10.5 14 C 9.9204 14 9.45 13.552 9.45 13 L 9.45 11 L 7.35 11 C 6.7704 11 6.3 10.552 6.3 10 C 6.3 9.448 6.7704 9 7.35 9 L 9.45 9 L 9.45 7 C 9.45 6.448 9.9204 6 10.5 6 C 11.0796 6 11.55 6.448 11.55 7 L 11.55 9 L 13.65 9 C 14.2296 9 14.7 9.448 14.7 10 M 10.5 18 C 5.8684 18 2.1 14.411 2.1 10 C 2.1 5.589 5.8684 2 10.5 2 C 15.1316 2 18.9 5.589 18.9 10 C 18.9 14.411 15.1316 18 10.5 18 M 10.5 0 C 4.7009 0 0 4.477 0 10 C 0 15.523 4.7009 20 10.5 20 C 16.2991 20 21 15.523 21 10 C 21 4.477 16.2991 0 10.5 0"></path>
+                </svg>
+            </Button>
+            {/* create template */}
+            <Button onClick={() => emit?.({ type: 'createTemplate' })} bgClass='bg-blue-700' text="create template">
+                <svg viewBox="2 2 20 20" className='h-full w-full fill-none stroke-white'
+                    strokeLinecap="round" strokeLinejoin="round"
+                    strokeWidth={1.5}
+                >
+                    <path d="M10 17C13.866 17 17 13.866 17 10C17 6.13401 13.866 3 10 3C6.13401 3 3 6.13401 3 10C3 13.866 6.13401 17 10 17Z"  />
+                    <path d="M20.9992 21L14.9492 14.95" />
+                    <path d="M6 10H14" />
+                    <path d="M10 6V14" />
                 </svg>
             </Button>
         </div>

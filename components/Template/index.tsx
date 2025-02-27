@@ -54,6 +54,8 @@ function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
     const [editorTemplate, setEditorTemplate] = useState<TemplateEntry | undefined>(undefined)
     const [code, setCode] = useState({ js: defaultJsCode, css: defaultCssCode });
     const [compiling, setCompiling] = useState(false)
+    const [scale, setScale] = useState(1);
+
 
     async function applyTemplate() {
         setCompiling(true);
@@ -85,7 +87,7 @@ function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
     }
 
     return (
-        <div className="flex gap-4 min-h-screen min-w-screen max-h-screen max-w-full overflow-auto print:p-0 print:block">
+        <div className={`${alice.variable} flex gap-4 min-h-screen min-w-screen max-h-screen max-w-full overflow-auto print:p-0 print:block`}>
             {mstate == 'templateDeveloping' &&
                 <div className="relative self-stretch flex py-1 px-1">
                     <Editor jsCode={code.js} cssCode={code.css} onChange={onCodeChange}
@@ -94,21 +96,31 @@ function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
                     {compiling && <Compiling />}
                 </div>
             }
-            <div className="flex flex-grow">
-                <div className="relative justify-between basis-full flex-grow-0 overflow-hidden flex gap-4 items-start print:block">
-                    <div key="page" id="resumeUI" className={`${alice.variable} ${roboto.variable} m-auto box-content border border-neutral-300 print:border-none print:m-0`}>
-                        <template.Template data={data} />
+            <div className="flex flex-grow gap-4">
+                <div className="justify-between basis-full flex-grow-0 flex p-4 scale-[var(--scale)] lg:scale-100 print:overflow-hidden print:p-0 print:block origin-top-left" style={{ '--scale': scale} as React.CSSProperties}>
+                    <div className="flex-grow flex items-center justify-center">
+                        <div key="page" id="resumeUI" className={`${roboto.variable} box-content border border-neutral-300 print:border-none print:m-0`}>
+                            <template.Template data={data} />
+                        </div>
                     </div>
-                    {
-                        mstate == 'templateDeveloping' ||
-                        <TemplatesCarousel
-                            templates={templates}
-                            customTemplate={editorTemplate}
-                            onTemplateClick={t => setTemplate(t)} />
-                    }
                 </div>
+                {
+                    mstate == 'templateDeveloping' ||
+                    <TemplatesCarousel
+                        templates={templates}
+                        customTemplate={editorTemplate}
+                        onTemplateClick={t => setTemplate(t)} />
+                }
             </div>
             <style title="customResumeCss" ref={styleRef}></style>
+            <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex gap-4 lg:hidden">
+                <button onClick={() => setScale(Math.min(2, scale * 1.25))} className="flex items-center px-6 py-3 pb-4 rounded-full bg-purple-800 font-semibold text-xl text-white leading-none shadow-lg transition-all duration-200 hover:shadow hover:-translate-y-[2px]">
+                    zoom in
+                </button>
+                <button onClick={() => setScale(Math.max(.1, scale * .75))} className="flex items-center px-6 py-3 pb-4 rounded-full bg-purple-800 font-semibold text-xl text-white leading-none shadow-lg transition-all duration-200 hover:shadow hover:-translate-y-[2px]">
+                    zoom out
+                </button>
+            </div>
         </div>
     )
 }
@@ -138,17 +150,29 @@ function TemplatesCarousel({ templates, onTemplateClick, customTemplate }: {
     const { onPrevButtonClick, onNextButtonClick } = useEmblaButtons(emblaApi)
 
     return (
-        <div className={twMerge("flex self-stretch gap-2 absolute top-0 right-0 h-full transition-all duration-300 lg:static lg:translate-x-0", !isShown && "translate-x-44")}>
-            <button onClick={()=>setIsShown(!isShown)} className="group mt-auto mb-2 w-16 h-16 pt-2 pb-1 rounded-3xl rounded-br-md rounded-tl-[2.5rem] shadow bg-yellow-600 lg:hidden">
-                <svg className="w-full h-full fill-black" viewBox="0 0 24 24">
-                    <circle className="[cx:15] group-hover:[cx:16] transition-all duration-300" cy="6" r="1.5" />
-                    <circle className="[cx:13] transition-all duration-300" cy="9" r="1.5" />
-                    <circle className="[cx:11] group-hover:[cx:10] transition-all duration-300" cy="12" r="1.5" />
-                    <circle className="[cx:13] transition-all duration-300" cy="15" r="1.5" />
-                    <circle className="[cx:15] group-hover:[cx:16] transition-all duration-300" cy="18" r="1.5" />
+        <div className={twMerge("flex self-stretch gap-2 fixed top-0 right-0 h-full transition-all duration-300 lg:static lg:translate-x-0 print:hidden", !isShown && "translate-x-44")}>
+            <button onClick={() => setIsShown(!isShown)} className="group absolute bottom-28 -left-4 -translate-x-full w-16 h-16 pr-2 rounded-full shadow bg-yellow-600 lg:hidden">
+                <svg className="w-full h-full fill-black xrotate-45" viewBox="0 0 24 24">
+                    <circle className={twMerge(
+                        "transition-all duration-300",
+                        !isShown && "[cx:15] group-hover:[cx:16]",
+                        isShown && "[cx:11] group-hover:[cx:10]"
+                    )} cy="6" r="1.5" />
+                    <circle className="transition-all duration-300 [cx:13] group-hover:[cx:13]" cy="9" r="1.5" />
+                    <circle className={twMerge(
+                        "transition-all duration-300",
+                        !isShown && "[cx:11] group-hover:[cx:10]",
+                        isShown && "[cx:15] group-hover:[cx:16]"
+                    )} cy="12" r="1.5" />
+                    <circle className="transition-all duration-300 [cx:13] group-hover:[cx:13]" cy="15" r="1.5" />
+                    <circle className={twMerge(
+                        "transition-all duration-300",
+                        !isShown && "[cx:15] group-hover:[cx:16]",
+                        isShown && "[cx:11] group-hover:[cx:10]"
+                    )} cy="18" r="1.5" />
                 </svg>
             </button>
-            <div className="relative self-stretch w-44 bg-neutral-100 flex flex-col gap-2 shadow lg:shadow-none print:hidden">
+            <div className="relative self-stretch w-44 bg-neutral-100 flex flex-col gap-2 shadow lg:shadow-none">
                 <div className="absolute top-0 left-0 w-full z-10 bg-gradient-to-b from-[70%] from-neutral-200 p-2 px-4">
                     <button
                         onClick={onNextButtonClick}
