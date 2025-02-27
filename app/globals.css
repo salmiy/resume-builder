@@ -139,6 +139,12 @@ button {
     size: 210mm 297mm;
     margin: 0;
   }
+
+  * {
+    shape-rendering: geometricPrecision;
+    image-rendering: crisp-edges;
+    text-rendering: optimizeLegibility;
+  }
 }
 
 
