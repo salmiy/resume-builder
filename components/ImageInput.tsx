@@ -1,15 +1,15 @@
 
-import { useState, useEffect, ChangeEvent, useRef, useCallback } from 'react';
+import { useState, useEffect, ChangeEvent, useRef } from 'react';
 import TextInput from './Input';
 
-function throttle(fn: CallableFunction, t: number) {
-    let to: NodeJS.Timeout|null = null;
+// function throttle(fn: CallableFunction, t: number) {
+//     let to: NodeJS.Timeout|null = null;
     
-    return function() {
-        if (to) clearTimeout(to)
-        to = setTimeout(() => fn(...arguments), t)
-    }
-}
+//     return function(...args) {
+//         if (to) clearTimeout(to)
+//         to = setTimeout(() => fn(args), t)
+//     }
+// }
 
 const ImageInput = (props: {
     value: string,
@@ -27,11 +27,11 @@ const ImageInput = (props: {
             setUrl(props.value)
     }, [props.value])
 
-    const imgTmpSetFromUrl = useCallback(throttle((url: string) => {
+    const imgTmpSetFromUrl = (url: string) => {
         if (!url) return
         if (!prevImage.current) prevImage.current = image
         setImage(url)
-    }, 1000), []) as (url: string) => void
+    }
 
     function onPictureChange(e: ChangeEvent<HTMLInputElement>) {
         const input = e.target as HTMLInputElement

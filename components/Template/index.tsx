@@ -14,6 +14,7 @@ import { twMerge } from "tailwind-merge";
 import useEmblaCarousel from "embla-carousel-react";
 import Template001 from "./Template001";
 import Template002 from "./002";
+import { MachineEmitter } from "@/machines/resumeMachine";
 
 const alice = Alice({
     weight: '400',
@@ -37,7 +38,7 @@ const templates = [
 ]
 
 
-function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: any }) {
+function ResumeUI({ mstate, emit }: { mstate: StateValue, emit: MachineEmitter }) {
     const data: DataScheme = useMachineStore();
     const styleRef = useRef<HTMLStyleElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)

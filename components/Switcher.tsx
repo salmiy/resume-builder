@@ -19,7 +19,7 @@ const Switcher = ({
     onChange, initial = false, size = 'base'
 }: {
     onChange: (isChecked: boolean) => void,
-    initial?: Boolean,
+    initial?: boolean,
     size?: 'xs' | 'sm' | 'base'
 }) => {
     const [isChecked, setIsChecked] = useState(!!initial)

@@ -1,5 +1,4 @@
 
-import { FormEvent, useState } from 'react';
 import Switcher from '@/components/Switcher';
 import { useMachineEmitter } from '@/context/machineContexts';
 import { HobbyEntry } from '@/machines/types';

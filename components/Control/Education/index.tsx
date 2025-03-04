@@ -24,7 +24,7 @@ export default function Education() {
             <header className="flex justify-center items-center gap-4 m-4 mr-2">
                 <button
                     className={`text-2xl py-2 px-4 flex-grow basis-0 rounded-full transition-all duration-200 ${showForm ? 'opacity-40 bg-[#bbb]' : 'opacity-100 bg-white'}`}
-                    onClick={() => { setShowForm(false), setEducationIdx(null) }}
+                    onClick={onShowList}
                 >List</button>
                 <div className="self-stretch w-[1px] my-3 bg-[#0005] hidden"></div>
                 <button

@@ -255,7 +255,7 @@ function Experience({ exp }: { exp: ExperienceEntry }) {
                         exp.technologies.length ?
                         <div className="flex items-center gap-2 pt-2">
                             {
-                                exp.technologies.map((t, i) => (
+                                exp.technologies.map((t) => (
                                     <div key={t.name} className="flex gap-2 rounded-full border border-solid border-[#ccc] justify-center items-center px-2 py-1">
                                         <img className="w-4 h-4 object-contain rounded-sm" src={t.icon} />
                                         {t.name}
@@ -321,7 +321,7 @@ function Project({ project }: { project: ProjectEntry }) {
                         project.technologies.length ?
                         <div className="flex flex-wrap items-center gap-2 pt-2">
                             {
-                                project.technologies.map((t, i) => (
+                                project.technologies.map((t) => (
                                     <div key={t.name} className="flex gap-2 rounded-full border border-solid border-[#ccc] justify-center items-center px-2">
                                         <img className="w-4 h-4 object-contain rounded-sm" src={t.icon} />
                                         {t.name}

@@ -3,7 +3,6 @@ import { ChangeEvent } from 'react';
 import ImageInput from '../ImageInput';
 import Switcher from '../Switcher';
 import { useMachineStore, useMachineEmitter } from '@/context/machineContexts';
-import useAutosizeTextArea from '@/hooks/useAutoResizeArea';
 import { DataScheme } from '@/machines/types';
 import TextInput from '../Input';
 import { AutoResizeTextArea } from '../AutoResizeTextArea';

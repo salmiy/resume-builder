@@ -31,7 +31,7 @@ export default function SkillsFilter({ onFilterChange }: {
     useEffect(() => {
         setHeight(ref.current?.offsetWidth ?? 0)
         setWidth((ref.current?.firstElementChild as HTMLDivElement).offsetWidth)
-    })
+    }, [])
 
 
     return (

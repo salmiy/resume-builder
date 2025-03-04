@@ -1,5 +1,5 @@
 import useAutosizeTextArea from "@/hooks/useAutoResizeArea";
-import { ChangeEventHandler, useEffect, useRef, useState } from "react"
+import { ChangeEventHandler, useRef } from "react"
 
 
 export function AutoResizeTextArea({
@@ -15,7 +15,6 @@ export function AutoResizeTextArea({
 })
 {
     const taRef = useRef<HTMLTextAreaElement>(null);
-    // useEffect(() => taRef.current?.setAttribute('rows', '1'))
     useAutosizeTextArea(taRef.current, value)
 
     return (

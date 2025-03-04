@@ -14,7 +14,7 @@ export function changeStyleSheetSelectors(s: CSSStyleSheet | undefined, fn: (s:s
         (r as CSSStyleRule).selectorText = fn((r as CSSStyleRule).selectorText)
     })
 }
-export function setStyleSheetDisabled(title: string, disabled: boolean) {
-    let styleSheet = findStyleSheetByTitle(title)
+export function setStyleSheetDisabled(title: string) {
+    const styleSheet = findStyleSheetByTitle(title)
     if (styleSheet) styleSheet.disabled = true;
 }

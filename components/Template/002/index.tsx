@@ -1,5 +1,4 @@
-import { useMachineStore } from "@/context/machineContexts";
-import { DataScheme } from "@/machines/resumeMachine";
+import { DataScheme } from "@/machines/types";
 import { Alice } from "next/font/google";
 
 
@@ -13,17 +12,16 @@ const alice = Alice({
 export default function Template({ data }: { data: DataScheme }) {
     return (
         <>
-            <Me />
+            <Me basics={data.basics} />
             <div className="flex content">
-                <Side />
+                <Side data={data} />
                 <main className="column main">main</main>
             </div>
         </>
     )
 }
 
-function Me() {
-    const { basics }: DataScheme = useMachineStore();
+function Me({basics}:{basics: DataScheme['basics']}) {
 
     return (
         <div className={`${alice.className} flex gap-8 p-6`}>
@@ -41,8 +39,8 @@ function Me() {
     )
 }
 
-function Side() {
-    const { basics }: DataScheme = useMachineStore();
+function Side( { data } : { data: DataScheme }) {
+    const { basics }: DataScheme = data
     return (
         <div className="column flex flex-col p-3 pt-0 w-[70mm] font-[family-name:var(--font-alice)]">
             {
