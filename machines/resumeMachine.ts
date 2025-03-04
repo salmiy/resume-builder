@@ -19,15 +19,15 @@ type EventType = { type: 'createTemplate' }
     | { type: 'experience.enable', value: boolean }
     | { type: 'experience.add', value: ExperienceEntry }
     | { type: 'experience.delete', value: number }
-    | { type: 'experience.update', index: number, value: Partial<ExperienceEntry> }
+    | { type: 'experience.update', id: number, value: Partial<ExperienceEntry> }
     | { type: 'education.enable', value: boolean }
     | { type: 'education.add', value: EducationEntry }
     | { type: 'education.delete', value: number }
-    | { type: 'education.update', index: number, value: Partial<EducationEntry> }
+    | { type: 'education.update', id: number, value: Partial<EducationEntry> }
     | { type: 'projects.enable', value: boolean }
     | { type: 'project.add', value: ProjectEntry }
     | { type: 'project.delete', value: number }
-    | { type: 'project.update', index: number, value: Partial<ProjectEntry> }
+    | { type: 'project.update', id: number, value: Partial<ProjectEntry> }
     | { type: 'links.enabled', value: boolean }
     | { type: 'link.add', value: SocialLinkEntry }
     | { type: 'link.update', id: string, value: Partial<SocialLinkEntry> }
@@ -89,6 +89,12 @@ export const initialContext: DataScheme = {
     },
 };
 
+function resetIds(ctx: DataScheme, key: 'experience' | 'education' | 'projects') {
+    const data = ctx[key].data
+    let id = 1;
+    data.forEach(d => d.id = id++)
+}
+
 const resumeMachine = createMachine({
     id: "resume_data",
     initial: 'composingResume',
@@ -99,7 +105,13 @@ const resumeMachine = createMachine({
     context: initialContext,
     on: {
         'load': {
-            actions: assign(({ context, event }) => ({ ...context, ...event.value }))
+            actions: assign(({ context, event }) => {
+                const data = event.value
+                resetIds(data, 'experience')
+                resetIds(data, 'education')
+                resetIds(data, 'projects')
+                return data
+            })
         },
         'basics.update': {
             actions: assign({
@@ -141,13 +153,20 @@ const resumeMachine = createMachine({
         },
         'experience.add': {
             actions: assign({
-                experience: ({ context, event }) => ({
-                    ...context.experience,
-                    data: [
-                        ...context.experience.data,
-                        { ...event.value, enabled: true }
-                    ]
-                })
+                experience: ({ context, event }) => {
+                    const data = context.experience.data
+                    return {
+                        ...context.experience,
+                        data: [
+                            ...data,
+                            {
+                                ...event.value,
+                                enabled: true,
+                                id: (data[data.length - 1]?.id ?? 0) + 1
+                            }
+                        ]
+                    }
+                }
             }),
         },
         'experience.delete': {
@@ -160,12 +179,15 @@ const resumeMachine = createMachine({
         },
         'experience.update': {
             actions: assign({
-                experience: ({ context, event }) => ({
-                    ...context.experience,
-                    data: context.experience.data.map(
-                        (e, i) => i != event.index ? e : { ...e, ...event.value }
-                    )
-                })
+                experience: ({ context, event }) => {
+                    const data = context.experience.data;
+                    const idx = data.findIndex(s => s.id == event.id)
+                    data[idx] = { ...data[idx], ...event.value, id: data[idx].id }
+                    return {
+                        ...context.experience,
+                        data
+                    }
+                }
             })
         },
         'education.enable': {
@@ -178,13 +200,20 @@ const resumeMachine = createMachine({
         },
         'education.add': {
             actions: assign({
-                education: ({ context, event }) => ({
-                    ...context.education,
-                    data: [
-                        ...context.education.data,
-                        { ...event.value, enabled: true }
-                    ]
-                })
+                education: ({ context, event }) => {
+                    const data = context.education.data
+                    return {
+                        ...context.education,
+                        data: [
+                            ...data,
+                            {
+                                ...event.value,
+                                enabled: true,
+                                id: (data[data.length - 1]?.id ?? 0) + 1
+                            }
+                        ]
+                    }
+                }
             }),
         },
         'education.delete': {
@@ -197,12 +226,15 @@ const resumeMachine = createMachine({
         },
         'education.update': {
             actions: assign({
-                education: ({ context, event }) => ({
-                    ...context.education,
-                    data: context.education.data.map(
-                        (e, i) => i != event.index ? e : { ...e, ...event.value }
-                    )
-                })
+                education: ({ context, event }) => {
+                    const data = context.education.data;
+                    const idx = data.findIndex(s => s.id == event.id)
+                    data[idx] = { ...data[idx], ...event.value, id: data[idx].id }
+                    return {
+                        ...context.education,
+                        data
+                    }
+                }
             })
         },
         'projects.enable': {
@@ -215,13 +247,20 @@ const resumeMachine = createMachine({
         },
         'project.add': {
             actions: assign({
-                projects: ({ context, event }) => ({
-                    ...context.projects,
-                    data: [
-                        ...context.projects.data,
-                        { ...event.value, enabled: true }
-                    ]
-                })
+                projects: ({ context, event }) => {
+                    const data = context.projects.data
+                    return {
+                        ...context.projects,
+                        data: [
+                            ...data,
+                            {
+                                ...event.value,
+                                enabled: true,
+                                id: (data[data.length - 1]?.id ?? 0) + 1
+                            }
+                        ]
+                    }
+                }
             }),
         },
         'project.delete': {
@@ -234,12 +273,16 @@ const resumeMachine = createMachine({
         },
         'project.update': {
             actions: assign({
-                projects: ({ context, event }) => ({
-                    ...context.projects,
-                    data: context.projects.data.map(
-                        (e, i) => i != event.index ? e : { ...e, ...event.value }
-                    )
-                })
+                projects: ({ context, event }) => {
+                    console.log(event)
+                    const data = context.projects.data;
+                    const idx = data.findIndex(s => s.id == event.id)
+                    data[idx] = { ...data[idx], ...event.value, id: data[idx].id }
+                    return {
+                        ...context.projects,
+                        data
+                    }
+                }
             })
         },
         'links.enabled': {

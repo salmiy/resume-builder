@@ -15,7 +15,6 @@ export default function Experience() {
         setExperienceIdx(null)
     }
     function onEditExperience(idx: number) {
-        console.log('setting index to: ', idx)
         setExperienceIdx(idx)
         setShowForm(true)
     }
@@ -39,7 +38,7 @@ export default function Experience() {
                         {
                         ...(experienceIdx != null ? {
                             experienceIndex: experienceIdx,
-                            experience: experience.data[experienceIdx]
+                            experience: experience.data.find(e => e.id == experienceIdx)
                         } : {})
                         }
                         showList={onShowList}

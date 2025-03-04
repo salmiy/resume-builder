@@ -50,6 +50,14 @@ function Category({ cat, show, onClick, order }: CategoryProps){
     )
 }
 
+/*
+width: 100vw;
+    top: 1rem;
+    right: 1rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+*/
+
 export default function ControlCenter() {
     const [collapsed, setCollapsed] = useState(true);
     const [shownCat, setShownCat] = useState<Category | null>(null);
@@ -61,12 +69,12 @@ export default function ControlCenter() {
 
     return (
         <div id="control"
-            className={`font-[family-name:var(--font-montserrat)] relative bg-[#263f3f] text-[#ddd] rounded-[2rem] transition-all duration-[400ms] delay-[50ms] ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] shadow  ${collapsed ? 'grid justify-center items-center cursor-pointer h-16 w-16' : 'flex flex-col h-[30rem] w-[25rem] overflow-hidden'}`}
+            className={`font-[family-name:var(--font-montserrat)] relative bg-[#263f3f] text-[#ddd] rounded-[2rem] transition-all duration-[400ms] delay-[50ms] ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] shadow z-20f ${collapsed ? 'grid justify-center items-center cursor-pointer h-16 w-16' : 'flex flex-col h-[30rem] w-[100vw] sm:w-[25rem] max-sm:top-4 max-sm:right-4 max-sm:rounded-b-none overflow-hidden'}`}
         >
             <header
                 className={`flex items-center bgf-[#263f3f] top-0 left-0 ${collapsed ? 'static h-16 w-16 justify-center p-0' : 'absolute w-full h-[4.25rem] p-4'}`}
             >
-                <Button onClick={() => setCollapsed(false)} className={collapsed ? 'flex text-black' : 'hidden'} text='control center' bgClass='bg-[#263f3f]' stroke={true}>
+                <Button onClick={() => setCollapsed(false)} className={collapsed ? 'flex text-black max-sm:[&_.label]:hidden' : 'hidden'} text='control center' bgClass='bg-[#263f3f]' stroke={true}>
                     <svg viewBox="0 0 20 20" className='h-full w-full'>
                         <path d="M 2 1 L 6 1 C 6.583 1.004 6.997 1.424 7 2 L 7 18 C 6.997 18.594 6.565 19.002 6 19 L 2 19 C 1.412 19.002 1.003 18.588 1 18 L 1 14 C 0.998 13.394 1.337 13.003 2 13 L 18 13 C 18.599 13.002 19.002 13.434 19 14 L 19 18 C 19.001 18.57 18.581 18.996 18 19 L 14 19 C 13.371 19.002 13.002 18.518 13 18 L 13 2 C 13.002 1.436 13.417 0.998 14 1 L 18 1 C 18.564 0.998 19.002 1.418 19 2 L 19 6 C 18.996 6.554 18.553 7.003 18 7 L 2 7 C 1.401 6.997 0.998 6.566 1 6 L 1 2 C 1.003 1.476 1.476 1.004 2 1 Z"></path>
                     </svg>

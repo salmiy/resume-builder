@@ -54,7 +54,7 @@ export default function ExperienceForm(props: FormProps) {
         if (editingExpIdx != undefined)
             emit({
                 type: 'experience.update',
-                index: editingExpIdx,
+                id: editingExpIdx,
                 value
             })
 

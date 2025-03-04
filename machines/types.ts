@@ -13,6 +13,7 @@ export type TechnologyEntry = {
 }
 
 export type ExperienceEntry = {
+    id?: number,
     enabled?: boolean,
     position: string,
     company: string,
@@ -25,6 +26,7 @@ export type ExperienceEntry = {
 }
 
 export type EducationEntry = {
+    id?: number,
     enabled?: boolean,
     degree: string,
     university: string,
@@ -35,8 +37,10 @@ export type EducationEntry = {
 }
 
 export type ProjectEntry = {
+    id?: number,
     enabled?: boolean,
     name: string,
+    url?: string,
     startDate: string,
     endDate: string,
     description: string,

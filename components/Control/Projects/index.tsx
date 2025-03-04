@@ -14,7 +14,7 @@ export default function Projects() {
         setShowForm(false)
         setprojectIdx(null)
     }
-    function onEditproject(idx: number) {
+    function onEditProject(idx: number) {
         setprojectIdx(idx)
         setShowForm(true)
     }
@@ -35,17 +35,18 @@ export default function Projects() {
             {
                 showForm ?
                     <ProjectForm
-                        {
-                        ...(projectIdx != null ? {
-                            projectIndex: projectIdx,
-                            project: projects.data[projectIdx]
-                        } : {})
-                        }
+                        {...(
+                            projectIdx != null ? {
+                                projectIndex: projectIdx,
+                                project: projects.data.find(p => p.id == projectIdx)
+                            }
+                                : {}
+                        )}
                         showList={onShowList}
                     /> :
                     <ProjectList
                         showAddForm={() => setShowForm(true)}
-                        onEditproject={onEditproject}
+                        onEditProject={onEditProject}
                     />
             }
         </section>

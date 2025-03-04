@@ -6,7 +6,7 @@ import EducationCard from "./Card";
 
 export default function EducationList(props: {
     showAddForm: () => void,
-    onEditeducation: (idx: number) => void
+    onEditEducation: (idx: number) => void
 }) {
     const { education }: DataScheme = useMachineStore()
     const emit = useMachineEmitter()
@@ -35,9 +35,9 @@ export default function EducationList(props: {
                                 <EducationCard
                                     key={i}
                                     education={e}
-                                    onEdit={() => props.onEditeducation(i)}
-                                    onDelete={() => emit?.({ type: 'education.delete', value: i })}
-                                    onEnabledChange={(enabled) => console.log(enabled)}
+                                    onEdit={() => props.onEditEducation(e.id as number)}
+                                    onDelete={() => emit({ type: 'education.delete', value: i })}
+                                    onEnabledChange={(enabled) => emit({ type: 'education.update', id: e.id as number ,value: { enabled: enabled } })}
                                 />
                             ))
                         }

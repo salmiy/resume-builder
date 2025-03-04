@@ -51,7 +51,7 @@ export default function EducationForm(props: {
         if (editingExpIdx != undefined)
             emit({
                 type: 'education.update',
-                index: editingExpIdx,
+                id: editingExpIdx,
                 value
             })
 

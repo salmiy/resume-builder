@@ -6,7 +6,7 @@ import ProjectCard from "./Card";
 
 export default function ProjectList(props: {
     showAddForm: () => void,
-    onEditproject: (idx: number) => void
+    onEditProject: (idx: number) => void
 }) {
     const { projects }: DataScheme = useMachineStore()
     const emit = useMachineEmitter()
@@ -35,9 +35,9 @@ export default function ProjectList(props: {
                                 <ProjectCard
                                     key={i}
                                     project={e}
-                                    onEdit={() => props.onEditproject(i)}
-                                    onDelete={() => emit?.({ type: 'project.delete', value: i })}
-                                    onEnabledChange={(enabled) => console.log(enabled)}
+                                    onEdit={() => props.onEditProject(e.id as number)}
+                                    onDelete={() => emit({ type: 'project.delete', value: i })}
+                                    onEnabledChange={(enabled) => emit({ type: 'project.update', id: e.id as number ,value: { enabled: enabled } })}
                                 />
                             ))
                         }

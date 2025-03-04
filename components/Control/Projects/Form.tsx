@@ -25,6 +25,7 @@ function formReducer(state: FormState, action: FormReducerEvent) {
         case "reset":
             state = {
                 name: "",
+                url: "",
                 startDate: "",
                 endDate: "",
                 description: ""
@@ -39,7 +40,7 @@ export default function ProjectForm(props: FormProps)
 {
     const { bulletPoints, technologies, ...expBasics } = props.project ?? {
         bulletPoints: [], technologies: [],
-        name: "", startDate: "",
+        name: "", url: "", startDate: "",
         endDate: "", description: ""
     }
     const emit = useMachineEmitter()
@@ -54,7 +55,7 @@ export default function ProjectForm(props: FormProps)
         if (editingProjectIdx != undefined)
             emit({
                 type: 'project.update',
-                index: editingProjectIdx,
+                id: editingProjectIdx,
                 value
             })
 
@@ -124,6 +125,15 @@ export default function ProjectForm(props: FormProps)
                     onChange={e => dispatch({
                         type: 'field.change',
                         field: 'name',
+                        value: e.target.value
+                    })}
+                />
+                <TextInput
+                    placeholder="Project URL (optional)"
+                    value={state.url}
+                    onChange={e => dispatch({
+                        type: 'field.change',
+                        field: 'url',
                         value: e.target.value
                     })}
                 />

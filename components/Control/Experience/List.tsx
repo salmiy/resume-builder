@@ -35,9 +35,9 @@ export default function ExperienceList(props: {
                                 <ExperienceCard
                                     key={i}
                                     experience={e}
-                                    onEdit={() => props.onEditExperience(i)}
-                                    onDelete={() => emit?.({ type: 'experience.delete', value: i })}
-                                    onEnabledChange={(enabled) => console.log(enabled)}
+                                    onEdit={() => props.onEditExperience(e.id as number)}
+                                    onDelete={() => emit({ type: 'experience.delete', value: i })}
+                                    onEnabledChange={(enabled) => emit({ type: 'experience.update', id: e.id as number ,value: { enabled: enabled } })}
                                 />
                             ))
                         }

@@ -21,10 +21,11 @@ export default function SkillsFilter({ onFilterChange }: {
             newAllowed = [...allowed, option.label]
         setAllowed(newAllowed)
 
-        console.log('new Allowed: ', newAllowed, allowed)
-
         if (newAllowed.length == 0) onFilterChange?.(skills => skills)
-        else onFilterChange?.((skills) => skills.filter(s => newAllowed.includes(s.category)))
+        else {
+            const filter: FilterFunction = (skills) => skills.filter(s => newAllowed.includes(s.category))
+            onFilterChange?.(filter)
+        }
     }
 
     useEffect(() => {

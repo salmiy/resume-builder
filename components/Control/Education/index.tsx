@@ -14,8 +14,7 @@ export default function Education() {
         setShowForm(false)
         setEducationIdx(null)
     }
-    function onEditeducation(idx: number) {
-        console.log('setting index to: ', idx)
+    function onEditEducation(idx: number) {
         setEducationIdx(idx)
         setShowForm(true)
     }
@@ -39,14 +38,14 @@ export default function Education() {
                         {
                         ...(educationIdx != null ? {
                             educationIndex: educationIdx,
-                            education: education.data[educationIdx]
+                            education: education.data.find(e => e.id == educationIdx)
                         } : {})
                         }
                         showList={onShowList}
                     /> :
                     <EducationList
                         showAddForm={() => setShowForm(true)}
-                        onEditeducation={onEditeducation}
+                        onEditEducation={onEditEducation}
                     />
             }
         </section>

@@ -4,7 +4,7 @@ export type FormState = Omit<ProjectEntry, 'bulletPoints'|'technologies'>
 
 export type FormReducerEvent = {
     type: 'field.change',
-    field: "name" | "startDate" | "endDate" | "description",
+    field: "name" | "url" | "startDate" | "endDate" | "description",
     value: string
 } | { type: 'reset' }
 

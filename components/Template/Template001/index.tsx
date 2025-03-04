@@ -7,7 +7,7 @@ export default function Template({ data }: { data: DataScheme }) {
     return (
         <>
             <Me basics={data.basics} />
-            <div className="flex content">
+            <div className="flex gap-2 content">
                 <Side data={data} />
                 <Main data={data} />
             </div>
@@ -34,7 +34,7 @@ function Me({ basics }: { basics: DataScheme['basics'] }) {
 
 function Side({ data }: { data: DataScheme }) {
     return (
-        <div className="column flex flex-col pl-3 px-1 gap-4 w-[60mm] font-[family-name:var(--font-alice)] flex-shrink-0">
+        <div className="column flex flex-col pl-4 px-1 gap-4 w-[65mm] font-[family-name:var(--font-alice)] flex-shrink-0">
             <Links links={data.links} />
             <Skills skills={data.skills} />
             <Languages languages={data.languages} />
@@ -47,18 +47,18 @@ function Main({ data }: { data: DataScheme }) {
     const projects = data.projects.data.filter(p => p.enabled)
     const educations = data.education.data.filter(e => e.enabled)
     return (
-        <div className="column flex flex-col font-[family-name:var(--font-alice)] pe-1">
+        <div className="column flex flex-col font-[family-name:var(--font-alice)] pr-2">
             {
                 data.basics.summary.enabled ?
                     data.basics.summary.data ?
                         <section>
-                            <Segment landmark={<Dot className="w-4 h-4 bg-blue-800" />} lineClassName="bg-blue-700" fullLine={false}>
+                            <Segment landmark={<Dot className="w-4 h-4 bg-black" />} fullLine={false}>
                                 <h2 className="text-3xl leading-tight font-bold">Summary</h2>
                             </Segment>
-                            <Segment lineClassName="bg-gradient-to-b from-blue-700 to-green-700">
-                                <p className="pt-2">{data.basics.summary.data}</p>
+                            <Segment>
+                                <p className="">{data.basics.summary.data}</p>
                             </Segment>
-                            <EmptySegment className="h-3" lineClassName="bg-green-700" />
+                            <EmptySegment className="h-3" />
                         </section> :
                         <Segment landmark={<Dot className="w-4 h-4 bg-yellow-600" />}>
                             <NotYetSet>Summary Not Yet Set</NotYetSet>
@@ -68,13 +68,13 @@ function Main({ data }: { data: DataScheme }) {
                 data.projects.enabled ?
                     projects.length ?
                         <section>
-                            <Segment landmark={<Dot className="w-4 h-4 bg-green-800" />} lineClassName="bg-green-700">
+                            <Segment landmark={<Dot className="w-4 h-4 bg-black" />} >
                                 <h2 className="text-3xl leading-tight font-bold">Projects</h2>
                             </Segment>
                             <div className="flex flex-col">
                                 {
-                                    projects.map((p, i) => (
-                                        <Project key={p.startDate} project={p} />
+                                    projects.map((p, idx) => (
+                                        <Project key={idx} project={p} />
                                     ))
                                 }
                             </div>
@@ -87,13 +87,13 @@ function Main({ data }: { data: DataScheme }) {
                 data.experience.enabled ?
                     experience.length ?
                         <section>
-                            <Segment landmark={<Dot className="w-4 h-4 bg-green-800" />} lineClassName="bg-green-700">
+                            <Segment landmark={<Dot className="w-3 h-3 bg-black" />}>
                                 <h2 className="text-3xl leading-tight font-bold">Experience</h2>
                             </Segment>
                             <div className="flex flex-col">
                                 {
-                                    experience.map((e, i) => (
-                                        <Experience key={e.startDate} exp={e} />
+                                    experience.map((e, idx) => (
+                                        <Experience key={idx} exp={e} />
                                     ))
                                 }
                             </div>
@@ -107,13 +107,13 @@ function Main({ data }: { data: DataScheme }) {
                     educations.length ?
                         <section key="languages">
                             <EmptySegment className="h-3" />
-                            <Segment landmark={<Dot className="w-4 h-4 bg-blue-800" />}>
+                            <Segment landmark={<Dot className="w-3 h-3 bg-black" />}>
                                 <h2 className="text-3xl leading-tight font-bold">Education</h2>
                             </Segment>
                             <div className="flex flex-col">
                                 {
-                                    educations.map((edu) => (
-                                        <Education key={edu.startDate} education={edu} />
+                                    educations.map((edu, idx) => (
+                                        <Education key={idx} education={edu} />
                                     ))
                                 }
                             </div>
@@ -181,7 +181,9 @@ function Skills({ skills }: { skills: DataScheme['skills'] }) {
                             {
                                 otherSkills.map(skill => (
                                     <div key={skill.name + skill.rating} className="flex gap-2 text-[#333] text-lg font-medium">
-                                        <Dot className="h-2 w-2" />
+                                        <div className="h-7 flex items-center">
+                                            <Dot className="h-2 w-2" />
+                                        </div>
                                         {skill.name}
                                     </div>
                                 ))
@@ -238,19 +240,19 @@ function Languages({ languages }: { languages: DataScheme['languages'] }) {
 function Experience({ exp }: { exp: ExperienceEntry }) {
     return (
         <div className="flex flex-col">
-            <EmptySegment className="h-3" lineClassName="bg-green-700" />
-            <Segment landmark={<Dot className="h-3 w-3 bg-white border-2 border-green-700" />} lineClassName="bg-green-700">
+            <EmptySegment className="h-1" />
+            <Segment landmark={<Dot className="h-[.6rem] w-[.6rem] bg-white border-2 border-black" />}>
                 <h2 className="text-xl leading-tight font-semibold">
                     {exp.position} | {exp.company}
                 </h2>
             </Segment>
-            <Segment lineClassName="bg-green-700">
+            <Segment>
                 <div className="flex flex-col">
                     <h3 className="text-lg leading-tight">
                         <span className="font-semibold">{exp.startDate}</span> to <span className="font-semibold">{exp.endDate}</span> | {exp.location}
                     </h3>
                     {
-                        exp.technologies.length &&
+                        exp.technologies.length ?
                         <div className="flex items-center gap-2 pt-2">
                             {
                                 exp.technologies.map((t, i) => (
@@ -260,10 +262,10 @@ function Experience({ exp }: { exp: ExperienceEntry }) {
                                     </div>
                                 ))
                             }
-                        </div>
+                        </div> : ''
                     }
                     {
-                        exp.bulletPoints.length &&
+                        exp.bulletPoints.length ?
                         <ul className="mt-1 ml-4 list-disc">
                             {
                                 exp.bulletPoints.map((bp, i) => (
@@ -272,7 +274,7 @@ function Experience({ exp }: { exp: ExperienceEntry }) {
                                     </li>
                                 ))
                             }
-                        </ul>
+                        </ul> : ''
                     }
                 </div>
             </Segment>
@@ -294,38 +296,48 @@ function Experience({ exp }: { exp: ExperienceEntry }) {
 function Project({ project }: { project: ProjectEntry }) {
     return (
         <div className="flex flex-col">
-            <EmptySegment className="h-3" lineClassName="bg-green-700" />
-            <Segment landmark={<Dot className="h-3 w-3 bg-white border-2 border-green-700" />} lineClassName="bg-green-700">
-                <h2 className="text-xl leading-tight font-semibold">
-                    {project.name}
-                </h2>
+            <EmptySegment className="h-1" />
+            <Segment landmark={<Dot className="h-[.6rem] w-[.6rem] bg-white border-2 border-black" />}>
+            <div className="flex items-center gap-4">
+                        <h2 className="text-xl leading-tight font-semibold">
+                            {project.name}
+                        </h2>
+                        <Dot className="h-[.3rem] w-[.3rem] bg-black" />
+                        <h3 className="text-base leading-tight">
+                            <span className="font-semibold">{project.startDate}</span> to <span className="font-semibold">{project.endDate}</span> 
+                        </h3>
+                    </div>
             </Segment>
-            <Segment lineClassName="bg-green-700">
+            <Segment>
                 <div className="flex flex-col">
-                    <h3 className="text-lg leading-tight">
+                    <h3 className="text-lg leading-tight hidden">
                         <span className="font-semibold">{project.startDate}</span> to <span className="font-semibold">{project.endDate}</span>
                     </h3>
                     {
-                        project.technologies.length &&
-                        <div className="flex items-center gap-2 pt-2">
+                        project.url ?
+                        <a href={project.url} target="_blank"> { project.url } </a> : ''
+                    }
+                    {
+                        project.technologies.length ?
+                        <div className="flex flex-wrap items-center gap-2 pt-2">
                             {
                                 project.technologies.map((t, i) => (
-                                    <div key={t.name} className="flex gap-2 rounded-full border border-solid border-[#ccc] justify-center items-center px-2 py-1">
+                                    <div key={t.name} className="flex gap-2 rounded-full border border-solid border-[#ccc] justify-center items-center px-2">
                                         <img className="w-4 h-4 object-contain rounded-sm" src={t.icon} />
                                         {t.name}
                                     </div>
                                 ))
                             }
-                        </div>
+                        </div> : ''
                     }
                     {
-                        project.description &&
+                        project.description ?
                         <p>
                             {project.description}
-                        </p>
+                        </p> : ''
                     }
                     {
-                        project.bulletPoints.length &&
+                        project.bulletPoints.length ?
                         <ul className="mt-1 ml-4 list-disc">
                             {
                                 project.bulletPoints.map((bp, i) => (
@@ -334,7 +346,7 @@ function Project({ project }: { project: ProjectEntry }) {
                                     </li>
                                 ))
                             }
-                        </ul>
+                        </ul> : ''
                     }
                 </div>
             </Segment>
@@ -360,14 +372,17 @@ function Education({ education }: { education: EducationEntry }) {
             <div className="flex flex-col">
                 <EmptySegment className="h-3" />
                 <Segment landmark={<Dot className="h-[.6rem] w-[.6rem] bg-white border-2 border-solid border-black" />}>
-                    <h2 className="text-xl leading-tight font-semibold">
-                        {education.degree} | {education.university}
-                    </h2>
+                        <h2 className="text-xl leading-tight font-semibold">
+                            {education.degree}
+                        </h2>
                 </Segment>
                 <Segment>
-                    <h3 className="text-lg leading-tight">
-                        <span className="font-semibold">{education.startDate}</span> to <span className="font-semibold">{education.endDate}</span> | {education.location}
-                    </h3>
+                    <div className="flex flex-col">
+                        <h3 className="text-base leading-tight font-semibold"> {education.university} </h3>
+                        <h3 className="text-base leading-tight">
+                            <span className="font-semibold">{education.startDate}</span> to <span className="font-semibold">{education.endDate}</span> | {education.location}
+                        </h3>
+                    </div>
                 </Segment>
             </div>
         </>
