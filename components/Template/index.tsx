@@ -29,13 +29,12 @@ const roboto = Roboto({
 })
 
 type TemplateType = (arg: { data: DataScheme }) => React.JSX.Element
-type TemplateEntry = { Template: TemplateType }
+type TemplateEntry = { Template: TemplateType, image?: string }
 
 
 
 const templates = [
-    { Template: Template001 },
-    { Template: Template002 }
+    { Template: Template001, image: '/template001.png' },
 ]
 
 
@@ -198,8 +197,10 @@ function TemplatesCarousel({ templates, onTemplateClick, customTemplate }: {
                             {
                                 templates.map((t, i) => (
                                     <div key={'template' + i} onClick={() => onTemplateClick(t)}
-                                        className="min-h-0 basis-[calc(9rem*1.414)] flex-grow-0 flex-shrink-0 w-36 rounded-md bg-gray-200 flex justify-center items-center text-lg capitalize cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:text-xl"
-                                    > {'template ' + i} </div>
+                                        className="relative min-h-0 basis-[calc(9rem*1.414)] flex-grow-0 flex-shrink-0 w-36 rounded-md bg-gray-200 flex justify-center items-center text-lg capitalize cursor-pointer transition-all duration-300 hover:bg-gray-300 hover:text-xl overflow-hidden shadow-lg hover:shadow-xl"
+                                    >
+                                        <Image src={t.image ?? '/templatePlaceholder.png'} alt="template image" fill />
+                                    </div>
                                 ))
                             }
                             <div key="bottomEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
