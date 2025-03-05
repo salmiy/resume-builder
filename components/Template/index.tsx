@@ -13,7 +13,6 @@ import { Alice, Roboto } from "next/font/google";
 import { twMerge } from "tailwind-merge";
 import useEmblaCarousel from "embla-carousel-react";
 import Template001 from "./Template001";
-import Template002 from "./002";
 import { MachineEmitter } from "@/machines/resumeMachine";
 import Image from "next/image";
 
