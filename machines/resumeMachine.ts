@@ -48,7 +48,7 @@ type EventType = { type: 'createTemplate' }
 
 export const initialContext: DataScheme = {
     basics: {
-        image: "https://eteflonline.com/wp-content/plugins/ld-dashboard/public/img/img_avatar.png",
+        image: "/avatar.png",
         name: "john doe",
         email: "johndoe@contact.me",
         phone: "+212 6 12 34 56 78",

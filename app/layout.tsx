@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Montserrat } from "next/font/google";
+import type { Viewport } from 'next'
 import "./globals.css";
 
 
@@ -17,13 +18,14 @@ const ibm_plex_mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Resume Builder",
   description: "A simple app that helps you build your resume and customize it by enabling/disabling every piece of data you input",
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false
-  }
 };
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false
+}
 
 export default function RootLayout({
   children,
@@ -35,7 +37,7 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${ibm_plex_mono.variable} antialiased`}
       >
-        { children }
+        {children}
       </body>
     </html>
   );

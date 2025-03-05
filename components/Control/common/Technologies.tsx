@@ -1,6 +1,7 @@
 import DeleteButton from "@/components/DeleteButton"
 import TextInput from "@/components/Input"
 import ImageInput from "@/components/ImageInput"
+import Image from "next/image"
 import { SkillEntry, TechnologyEntry } from "@/machines/types"
 import { FormEvent, useEffect, useRef, useState } from "react"
 import { iconBase64, softwareOption } from "./staticData"
@@ -13,7 +14,7 @@ function SoftwareSkills({ skills, onSkillClick }: {
     const [height, setHeight] = useState(0)
     const ref = useRef<HTMLDivElement>(null)
 
-    useEffect(() => setHeight(ref.current?.offsetWidth ?? 0))
+    useEffect(() => setHeight(ref.current?.offsetWidth ?? 0), [])
 
 
     return skills.length == 0 ? null : (
@@ -22,7 +23,9 @@ function SoftwareSkills({ skills, onSkillClick }: {
                 {
                     skills.map(skill => (
                         <div key={skill.name} onClick={() => onSkillClick?.(skill)} className="flex-shrink-0 flex flex-col items-center gap-2 py-2 px-1 rounded-full bg-white border border-solid shadow-md text-[#333] text-base -scale-x-100 cursor-pointer">
-                            <img className="w-6 h-6 object-contain rounded-lg rotate-90" src={skill.icon} alt="docker" />
+                            <div className="relative w-6 h-6 rounded-lg rotate-90 overflow-hidden">
+                                <Image className="object-contain" src={skill.icon ?? iconBase64} alt="docker" fill />
+                            </div>
                             <div className="[writing-mode:vertical-lr] select-none">{ skill.name }</div>
                         </div>
                     ))
@@ -97,7 +100,9 @@ export default function Technologies(props: {
                 {
                     list.map((t, i) => (
                         <li key={i} className="flex gap-3 items-start">
-                            <img src={t.icon} className="w-8 h-8 rounded-md" />
+                            <div className="relative w-8 h-8 rounded-md overflow-hidden">
+                                <Image src={t.icon} alt={t.name + ' icon'} className="object-contain" fill />
+                            </div>
                             <div className="flex-grow text-xl capitalize break-words break-all">{t.name}</div>
                             <DeleteButton
                                 onClick={() => onTechnologyDeleted(i)}

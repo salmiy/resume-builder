@@ -1,4 +1,5 @@
 import { DataScheme, EducationEntry, ExperienceEntry, ProjectEntry } from "@/machines/types";
+import Image from "next/image";
 import React from "react";
 
 
@@ -18,7 +19,9 @@ export default function Template({ data }: { data: DataScheme }) {
 function Me({ basics }: { basics: DataScheme['basics'] }) {
     return (
         <div className="flex gap-8 p-6 font-[family-name:var(--font-alice)]">
-            <img src={basics.image} className="object-cover h-24 w-24 border border-black rounded-full" />
+            <div className="relative object-cover h-24 w-24 border border-black rounded-full overflow-hidden">
+                <Image src={basics.image} alt={basics.name + ' image'} className="object-cover" fill />
+            </div>
             <div className="flex flex-col justify-center">
                 <h1 className={`text-4xl font-bold capitalize`}>{basics.name}</h1>
                 <h2 className="text-xl font-bold text-[#666] capitalize">{basics.title}</h2>
@@ -56,7 +59,7 @@ function Main({ data }: { data: DataScheme }) {
                                 <h2 className="text-3xl leading-tight font-bold">Summary</h2>
                             </Segment>
                             <Segment>
-                                <p className="">{data.basics.summary.data}</p>
+                                <p className="text-sm">{data.basics.summary.data}</p>
                             </Segment>
                             <EmptySegment className="h-3" />
                         </section> :
@@ -132,12 +135,14 @@ function Links({ links }: { links: DataScheme['links'] }) {
     const data = links.data.filter(l => l.enabled)
     return (
         links.enabled && data.length ?
-            <section key="links" className="flex gap-2 flex-wrap">
+            <section key="links" className="flex flex-col gap-2 flex-wrap">
                 {
                     data.map(link => (
                         <a key={link.name} href={link.url} target="_blank" className="font-[family-name:var(--font-alice)] flex items-center gap-2 text-[#333] text-xl">
-                            <img src={link.icon} className="w-6 h-6 object-contain rounded-md" alt={link.name} />/
-                            <span> {link.userId}</span>
+                            <div className="relative w-6 h-6 rounded-md overflow-hidden">
+                                <Image src={link.icon} className="object-contain" alt={link.name + ' icon'} fill />/
+                            </div>
+                            <span>/ {link.userId}</span>
                         </a>
                     ))
                 }
@@ -162,7 +167,12 @@ function Skills({ skills }: { skills: DataScheme['skills'] }) {
                                 softwareSkills.map(skill => (
                                     <React.Fragment key={skill.name + skill.rating}>
                                         <div className="flex gap-2 px-2 py-1 rounded-full border border-solid border-[#333] text-[#333] text-base">
-                                            {skill.icon && <img src={skill.icon} className="w-6 h-6 object-contain rounded-lg" />}
+                                            {
+                                                skill.icon && 
+                                                <div className="relative w-6 h-6 rounded-md overflow-hidden">
+                                                    <Image src={skill.icon} alt={skill.name + ' icon'} className="object-contain" fill />
+                                                </div>
+                                            }
                                             {skill.name}
                                         </div>
                                     </React.Fragment>
@@ -257,7 +267,9 @@ function Experience({ exp }: { exp: ExperienceEntry }) {
                             {
                                 exp.technologies.map((t) => (
                                     <div key={t.name} className="flex gap-2 rounded-full border border-solid border-[#ccc] justify-center items-center px-2 py-1">
-                                        <img className="w-4 h-4 object-contain rounded-sm" src={t.icon} />
+                                        <div className="relative overflow-hidden w-4 h-4 rounded-sm">
+                                            <Image className="object-contain" src={t.icon} alt={t.name + ' icon'} fill />
+                                        </div>
                                         {t.name}
                                     </div>
                                 ))
@@ -309,27 +321,15 @@ function Project({ project }: { project: ProjectEntry }) {
                     </div>
             </Segment>
             <Segment>
-                <div className="flex flex-col">
+                <div className="flex flex-col pb-1">
                     <h3 className="text-lg leading-tight hidden">
                         <span className="font-semibold">{project.startDate}</span> to <span className="font-semibold">{project.endDate}</span>
                     </h3>
                     {
                         project.url ?
-                        <a href={project.url} target="_blank"> { project.url } </a> : ''
+                        <a href={project.url} className="text-sm" target="_blank"> { project.url } </a> : ''
                     }
-                    {
-                        project.technologies.length ?
-                        <div className="flex flex-wrap items-center gap-2 pt-2">
-                            {
-                                project.technologies.map((t) => (
-                                    <div key={t.name} className="flex gap-2 rounded-full border border-solid border-[#ccc] justify-center items-center px-2">
-                                        <img className="w-4 h-4 object-contain rounded-sm" src={t.icon} />
-                                        {t.name}
-                                    </div>
-                                ))
-                            }
-                        </div> : ''
-                    }
+                    
                     {
                         project.description ?
                         <p>
@@ -341,12 +341,27 @@ function Project({ project }: { project: ProjectEntry }) {
                         <ul className="mt-1 ml-4 list-disc">
                             {
                                 project.bulletPoints.map((bp, i) => (
-                                    <li key={'bp' + i} className="text-[#333] text-base font-medium">
+                                    <li key={'bp' + i} className="text-[#333] text-sm font-medium">
                                         {bp}
                                     </li>
                                 ))
                             }
                         </ul> : ''
+                    }
+                    {
+                        project.technologies.length ?
+                        <div className="flex flex-wrap items-center gap-1 pt-2">
+                            {
+                                project.technologies.map((t) => (
+                                    <div key={t.name} className="flex gap-2 rounded-full border border-solid border-[#ccc] justify-center items-center px-2 text-sm">
+                                        <div className="relative overflow-hidden w-4 h-4 rounded-sm">
+                                            <Image className="object-contain" src={t.icon} alt={t.name + ' icon'} fill />
+                                        </div>
+                                        {t.name}
+                                    </div>
+                                ))
+                            }
+                        </div> : ''
                     }
                 </div>
             </Segment>

@@ -15,6 +15,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import Template001 from "./Template001";
 import Template002 from "./002";
 import { MachineEmitter } from "@/machines/resumeMachine";
+import Image from "next/image";
 
 const alice = Alice({
     weight: '400',
@@ -188,9 +189,9 @@ function TemplatesCarousel({ templates, onTemplateClick, customTemplate }: {
                             <div key="topEmptySpace" className="min-h-0 basis-[3.5rem] flex-grow-0 flex-shrink-0"></div>
                             {customTemplate &&
                                 <div key={'customtemplate'} onClick={() => onTemplateClick(customTemplate)} className="group flex flex-col gap-0 cursor-pointer">
-                                    <div
-                                        className="min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-yellow-600   transition-all duration-300 group-hover:bg-yellow-500"
-                                    ><img src="https://plasma.coveo.com/assets/CodeEditor-Bu-pz_XT.png" className="w-full h-full object-contain" /></div>
+                                    <div className="relative min-h-0 basis-[12rem] flex-grow-0 flex-shrink-0 w-[calc(12rem/1.414)] rounded-md bg-yellow-600 transition-all duration-300 group-hover:bg-yellow-500" >
+                                        <Image src="/codeEditor.png" alt="code editor template" className="object-contain" fill />
+                                    </div>
                                     <div className="text-lgf capitalize text-center">Editor template</div>
                                 </div>
                             }
@@ -232,7 +233,7 @@ function Editor({ jsCode, cssCode, onChange, onApply, onDone }: {
     })
 
     return (
-        <div className={`relative self-stretch flex-shrink-0 bg-[#282c34] flex py-1 px-1 overflow-hidden  max-w-[calc(100vw-1rem)] transition-all duration-300 ${collapsed? "w-[5.25rem]" : "w-[60rem]"}`}>
+        <div className={`relative self-stretch flex-shrink-0 bg-[#282c34] flex py-1 px-1 overflow-hidden  max-w-[calc(100vw-1rem)] transition-all duration-300 ${collapsed ? "w-[5.25rem]" : "w-[60rem]"}`}>
             <div className="self-stretch flex flex-col w-full min-w-[min(calc(100vw-1.5rem),60rem)] flex-grow-1">
                 <div className={`flex justify-between gap-2 px-4 transition-all delay-200 flex-wrap`}>
                     <div className="flex gap-0 items-center">

@@ -1,6 +1,7 @@
 
 import { useState, useEffect, ChangeEvent, useRef } from 'react';
 import TextInput from './Input';
+import Image from 'next/image';
 
 // function throttle(fn: CallableFunction, t: number) {
 //     let to: NodeJS.Timeout|null = null;
@@ -70,9 +71,9 @@ const ImageInput = (props: {
         <div className="relative flex flex-col">
             <div
                 onClick={() => setOptions(!options)}
-                className={`flex justify-center cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] hover:scale-105 ${props.className}`}
+                className={`relative flex justify-center cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] hover:scale-105 ${props.className}`}
             >
-                <img className={`object-cover`} src={image} />
+                <Image className={`object-cover`} src={image} alt="input image preview" fill />
             </div>
             {options &&
                 <div className={`flex flex-col absolute w-56 bg-white text-whitef text-base shadow-xl rounded-xl overflow-hidden border border-gray-300 ${props.optionsClassName}`}>

@@ -31,7 +31,7 @@ export default function RangeInput({
                             (value ?? max) < min ? min : (value ?? max)
         const val = 100 * (initialVal - min) / (max - min);
         setPercentage(val)
-    })
+    }, [])
 
     return (
         <div className="flex flex-col gap-4">

@@ -1,6 +1,7 @@
 import Switcher from '@/components/Switcher';
 import { useMachineEmitter } from '@/context/machineContexts';
 import { SocialLinkEntry } from '@/machines/types';
+import Image from 'next/image';
 
 
 export default function SocialLinkCard({ link, onEdit, onDelete }: {
@@ -13,7 +14,9 @@ export default function SocialLinkCard({ link, onEdit, onDelete }: {
         <section className="flex flex-col gap-2 p-3 bg-white rounded-lg shadow-md">
             <header className="flex justify-between items-start">
                 <div className="flex gap-3 items-center">
-                    <img className="h-10 w-10 rounded-lg shadow" src={link.icon} />
+                    <div className="relative h-10 w-10 rounded-lg shadow">
+                        <Image className="object-contain rounded-lg" src={link.icon} alt={link.name + ' icon'} fill />
+                    </div>
                     <h2 className="text-xl font-medium">{link.name}</h2>
                 </div>
                 <Switcher
